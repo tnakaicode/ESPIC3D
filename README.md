@@ -1,0 +1,4 @@
+emSolve
+=======
+
+Electromagnetic field solver
