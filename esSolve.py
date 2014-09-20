@@ -1,37 +1,35 @@
 from numpy import *
-
-X0 = 0.0
-L = 1.0
-N = 10
-DX = L/N
-
-pts = N+1
-
-V0 = 1.0
-V5 = 3.0
-VN = 2.0
+import math
 
 # D * potential = - DX^2 * charge / eps_0
+#Needed later
+#L = 1.0
+#X0 = 0.0
+#DX = L/N
+#DX2 = pow(DX,2.0)
+#EPS0 = 8.854187817e-12
 
-D = zeros(shape=(pts,pts))
-potBC = zeros(shape=(pts))
+N = 10
+V0 = 1.0
+VN = 2.0
 
-for row in xrange(N+1):
-  if row == 0 or row == 5 or row == N:
-    D[row][row] = 1.0
-    if row == 0:
-      potBC[row] = V0
-    if row == 5:
-      potBC[row] = V5
-    if row == N:
-      potBC[row] = VN
-  else:
-    for col in xrange(N+1):
-      if col == row-1 or col == row+1:
-        D[row][col] = 1.0
-      elif col == row:
-        D[row][col] = -2.0  
+def laplace1D(N,V0,VN):
+  pts = N + 1
+  D = zeros(shape=(pts,pts))
+  potBC = zeros(shape=(pts))
 
-potential = linalg.solve(D,potBC)
+  for row in xrange(N+1):
+    if row == 0 or row == N:
+      D[row][row] = 1.0
+      if row == 0:
+        potBC[row] = V0
+      if row == N:
+        potBC[row] = VN
+    else:
+      for col in xrange(N+1):
+        if col == row-1 or col == row+1:
+          D[row][col] = 1.0
+        elif col == row:
+          D[row][col] = -2.0  
 
-print potential
+  return linalg.solve(D,potBC)
