@@ -1,6 +1,11 @@
 from numpy import *
 import math
 
+# TO DO
+# 1. will need to allow neumann BCs
+# 2. Poisson
+# 3. Look at http://wiki.scipy.org/PerformancePython
+
 # D * potential = - DX^2 * charge / eps_0
 #Needed later
 #L = 1.0
@@ -13,7 +18,26 @@ N = 10
 V0 = 1.0
 VN = 2.0
 
-def laplace1D(N,V0,VN):
+def keepGoing(A,x,B,tol):
+  stillGTtol = 0
+  for i in ndindex(x.shape):
+    if dot(A,x)[i] - B[i] > tol:
+      stillGTtol = stillGTtol + 1
+  if stillGTtol == 0:
+    return 0
+  else:
+    return 1
+
+def iterative(D,potBC,tol):
+  x = copy(potBC)
+  # dont hard code this, later
+  while keepGoing(D,x,potBC,1.0e-9):
+    tempX = copy(x)
+    for i in ndindex(x.shape):
+      x[i] = tempX[i] + (1/D[i][i])*(potBC[i] - dot(D,tempX)[i])
+  return x
+
+def laplace1D(N,V0,VN,type,tol):
   pts = N + 1
   D = zeros(shape=(pts,pts))
   potBC = zeros(shape=(pts))
@@ -32,4 +56,9 @@ def laplace1D(N,V0,VN):
         elif col == row:
           D[row][col] = -2.0  
 
-  return linalg.solve(D,potBC)
+  if type == "direct":
+    return linalg.solve(D,potBC)
+  elif type == "iterative":
+    return iterative(D,potBC,tol)
+  else:
+    return "invalid type"
