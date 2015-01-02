@@ -1,5 +1,8 @@
 from numpy import *
 import esSolve
+import sys
+
+tol = (sys.argv)[1]
 
 def test(calc,accept,tol,name):
   numPass = 0
@@ -15,7 +18,6 @@ def test(calc,accept,tol,name):
   else:
     print name + ": fail"
 
-tol = 1.0e-5
 N = 10
 V0 = 1.0
 VN = 2.0
