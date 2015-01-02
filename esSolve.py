@@ -14,10 +14,6 @@ import math
 #DX2 = pow(DX,2.0)
 #EPS0 = 8.854187817e-12
 
-N = 10
-V0 = 1.0
-VN = 2.0
-
 def keepGoing(A,x,B,tol):
   stillGTtol = 0
   for i in ndindex(x.shape):
