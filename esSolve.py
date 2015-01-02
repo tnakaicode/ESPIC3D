@@ -26,8 +26,7 @@ def keepGoing(A,x,B,tol):
 
 def iterative(D,potBC,tol):
   x = copy(potBC)
-  # dont hard code this, later
-  while keepGoing(D,x,potBC,1.0e-9):
+  while keepGoing(D,x,potBC,tol):
     tempX = copy(x)
     for i in ndindex(x.shape):
       x[i] = tempX[i] + (1/D[i][i])*(potBC[i] - dot(D,tempX)[i])
