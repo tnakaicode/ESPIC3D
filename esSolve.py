@@ -20,7 +20,7 @@ def laplace1D(N,V0,VN,type,tol):
   D = zeros(shape=(pts,pts))
   potBC = zeros(shape=(pts))
 
-  for row in xrange(N+1):
+  for row in xrange(pts):
     if row == 0 or row == N:
       D[row][row] = 1.0
       if row == 0:
@@ -28,7 +28,40 @@ def laplace1D(N,V0,VN,type,tol):
       if row == N:
         potBC[row] = VN
     else:
-      for col in xrange(N+1):
+      for col in xrange(pts):
+        if col == row-1 or col == row+1:
+          D[row][col] = 1.0
+        elif col == row:
+          D[row][col] = -2.0  
+
+  if type == "direct":
+    return direct.directly(D,potBC)
+  elif type == "iterative":
+    return iterate.iterative(D,potBC,tol)
+  else:
+    return "invalid type"
+
+# PHI[(Ny+1)*i + j] = phi[i][j]
+# V0x, VNx, V0y, VNy are each arrays
+# phi[0][j] = PHI[j] = V0x
+# phi[i][0] = PHI[(Ny+1)*i] = V0y
+# phi[Nx][j] = PHI[(Ny+1)*Nx + j] = VNx
+# phi[i][Ny] = PHI[(Ny+1)*i + Ny] = VNy
+# Should there be a check that V0x[0] = V0y[0] ?
+def laplace2D(Nx,V0x,VNx,Ny,V0y,VNy,type,tol):
+  pts = (Nx + 1)*(Ny + 1)
+  D = zeros(shape=(pts,pts))
+  potBC = zeros(shape=(pts))
+
+  for row in xrange(pts):
+    if row == 0 or row == N:
+      D[row][row] = 1.0
+      if row == 0:
+        potBC[row] = V0
+      if row == N:
+        potBC[row] = VN
+    else:
+      for col in xrange(pts):
         if col == row-1 or col == row+1:
           D[row][col] = 1.0
         elif col == row:
