@@ -10,7 +10,7 @@ tol = (sys.argv)[1]
 # 1D #
 ######
 
-Nx = 10
+N = 10
 V0 = 1.0
 VN = 2.0
 inc = (VN - V0)/N
@@ -36,13 +36,16 @@ DX = LX / NX
 DY = LY / NY
 
 # V(x,y) = x^2 - y^2
-potAccept2D =  
+#potAccept2D = 
 
-potDirect2D = esSolve.laplace2D(Nx,V0x,VNx,Ny,V0y,VNy,"direct",tol)
-potIterative2D = esSolve.laplace2D(Nx,V0x,VNx,Ny,V0y,VNy,"iterative",tol)
+# should laplace2D return a 2d array? probably, in which case
+# test.test needs to be modified... 
 
-test.test(potDirect2D,potAccept2D,tol,"direct")
-test.test(potIterative2D,potAccept2D,tol,"iterative")
+#potDirect2D = esSolve.laplace2D(Nx,V0x,VNx,Ny,V0y,VNy,"direct",tol)
+#potIterative2D = esSolve.laplace2D(Nx,V0x,VNx,Ny,V0y,VNy,"iterative",tol)
+
+#test.test(potDirect2D,potAccept2D,tol,"direct")
+#test.test(potIterative2D,potAccept2D,tol,"iterative")
 
 ######
 # 3D #

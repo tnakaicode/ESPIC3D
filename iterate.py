@@ -1,6 +1,10 @@
 from numpy import *
 import math
 
+# TO DO;
+# iterative won't work if D[i][i] = 0
+# decide how to handle that
+
 def keepGoing(A,x,B,tol):
   stillGTtol = 0
   for i in ndindex(x.shape):

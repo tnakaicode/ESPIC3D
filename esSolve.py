@@ -15,6 +15,12 @@ import iterate,direct
 #DX2 = pow(DX,2.0)
 #EPS0 = 8.854187817e-12
 
+##################################
+
+######
+# 1D #
+######
+
 def laplace1D(N,V0,VN,type,tol):
   pts = N + 1
   D = zeros(shape=(pts,pts))
@@ -40,6 +46,10 @@ def laplace1D(N,V0,VN,type,tol):
     return iterate.iterative(D,potBC,tol)
   else:
     return "invalid type"
+
+######
+# 2D #
+######
 
 # PHI[(Ny+1)*i + j] = phi[i][j]
 # V0x, VNx, V0y, VNy are each arrays
@@ -73,3 +83,12 @@ def laplace2D(Nx,V0x,VNx,Ny,V0y,VNy,type,tol):
     return iterate.iterative(D,potBC,tol)
   else:
     return "invalid type"
+
+  # 2D should return a 2d array!
+
+######
+# 3D #
+######
+# PHI[(Nz+1)*(Ny+1)*i+(Nz+1)*j+k] = phi[i][j][k]
+
+  # 3D should return a 3d array!
