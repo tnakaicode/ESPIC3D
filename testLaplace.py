@@ -4,7 +4,7 @@ import sys
 import test
 
 # Relative error tolerance
-tol = (sys.argv)[1]
+tol = float((sys.argv)[1])
 
 ######
 # 1D #
@@ -27,7 +27,7 @@ test.test(potIterative1D,potAccept1D,tol,"iterative")
 ######
 
 NX = 10
-NY = 15
+NY = 16
 
 LX = 1.0
 LY = 2.0
@@ -36,16 +36,21 @@ DX = LX / NX
 DY = LY / NY
 
 # V(x,y) = x^2 - y^2
-#potAccept2D = 
+potAccept2D = empty((NX+1,NY+1))
 
-# should laplace2D return a 2d array? probably, in which case
-# test.test needs to be modified... 
+for i,j in ndindex(potAccept2D.shape):
+  potAccept2D[i][j] = pow(DX*i,2.0) - pow(DY*j,2.0)   
 
-#potDirect2D = esSolve.laplace2D(Nx,V0x,VNx,Ny,V0y,VNy,"direct",tol)
-#potIterative2D = esSolve.laplace2D(Nx,V0x,VNx,Ny,V0y,VNy,"iterative",tol)
+V0x = [potAccept2D[0][j]  for j in xrange(NY+1)]
+VNx = [potAccept2D[NX][j] for j in xrange(NY+1)]
+V0y = [potAccept2D[i][0]  for i in xrange(NX+1)]
+VNy = [potAccept2D[i][NY] for i in xrange(NX+1)]
 
-#test.test(potDirect2D,potAccept2D,tol,"direct")
-#test.test(potIterative2D,potAccept2D,tol,"iterative")
+potDirect2D = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"direct",tol)
+potIterative2D = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"iterative",tol)
+
+test.test(potDirect2D,potAccept2D,tol,"direct")
+test.test(potIterative2D,potAccept2D,tol,"iterative")
 
 ######
 # 3D #
