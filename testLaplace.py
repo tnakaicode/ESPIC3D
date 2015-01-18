@@ -4,7 +4,9 @@ import sys
 import test
 
 # Relative error tolerance
-tol = float((sys.argv)[1])
+#tol = float((sys.argv)[1])
+
+tol = 1.0e-2
 
 ######
 # 1D #
@@ -19,18 +21,18 @@ potAccept1D = arange(V0, VN + inc, inc)
 potDirect1D = esSolve.laplace1D(N,V0,VN,"direct",tol)
 potIterative1D = esSolve.laplace1D(N,V0,VN,"iterative",tol)
 
-test.test(potDirect1D,potAccept1D,tol,"direct")
-test.test(potIterative1D,potAccept1D,tol,"iterative")
+test.test(potDirect1D,potAccept1D,tol,"1D direct")
+test.test(potIterative1D,potAccept1D,tol,"1D iterative")
 
 ######
 # 2D #
 ######
 
 NX = 10
-NY = 16
+NY = 10
 
 LX = 1.0
-LY = 2.0
+LY = 1.0
 
 DX = LX / NX
 DY = LY / NY
@@ -49,8 +51,8 @@ VNy = [potAccept2D[i][NY] for i in xrange(NX+1)]
 potDirect2D = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"direct",tol)
 potIterative2D = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"iterative",tol)
 
-test.test(potDirect2D,potAccept2D,tol,"direct")
-test.test(potIterative2D,potAccept2D,tol,"iterative")
+test.test(potDirect2D,potAccept2D,tol,"2D direct")
+test.test(potIterative2D,potAccept2D,tol,"2D iterative")
 
 ######
 # 3D #

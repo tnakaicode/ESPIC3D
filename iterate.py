@@ -6,6 +6,8 @@ import math
 # decide how to handle that
 
 def keepGoing(A,x,B,tol):
+  # TEMPORARY
+  tol = 1.0e-10
   stillGTtol = 0
   for i in ndindex(x.shape):
     if dot(A,x)[i] - B[i] > tol:

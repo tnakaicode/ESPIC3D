@@ -15,6 +15,6 @@ def test(calc,accept,tol,name):
         numPass = numPass + 1
 
   if numPass == numTest:
-    print name + ": pass (" + str(numPass) + " of " + str(numTest) + " pass)"
+    print name + ": pass"
   else:
-    print name + ": fail (" + str(numPass) + " of " + str(numTest) + " pass)"
+    print name + ": fail (" + str(100.0*numPass/numTest) + " percent pass)"
