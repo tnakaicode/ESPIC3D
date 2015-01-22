@@ -3,9 +3,10 @@ import math
 import iterate,direct
 
 # TO DO
-# 1. will need to allow neumann BCs
+# 1. Neumann BCs
 # 2. Poisson
-# 3. Look at http://wiki.scipy.org/PerformancePython
+# 3. Parallelize
+# 4. Look at http://wiki.scipy.org/PerformancePython
 
 ######
 # 1D #
@@ -28,12 +29,16 @@ def laplace1D(N,V0,VN,type,tol):
       D[row][row+1] = 1.0
       D[row][row] = -2.0  
 
+  phi = zeros((pts))
+
   if type == "direct":
-    return direct.directly(D,potBC)
+    phi = direct.directly(D,potBC)
   elif type == "iterative":
-    return iterate.iterative(D,potBC,tol)
+    phi = iterate.iterative(phi,D,potBC,tol)
   else:
     return "invalid type"
+
+  return phi
 
 ######
 # 2D #
@@ -44,6 +49,8 @@ def laplace1D(N,V0,VN,type,tol):
 # Should there be a check that V0x[0] = V0y[0] ?
 
 def laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,type,tol):
+  phi = zeros((NX+1,NY+1))
+
   pts = (NX + 1)*(NY + 1)
   D = zeros(shape=(pts,pts))
   potBC = zeros(shape=(pts))
@@ -80,24 +87,25 @@ def laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,type,tol):
       rowsNotBC.remove(VNxIndex)
 
   for row in rowsNotBC:
-# For now just multiply by DX^2
-    coeff1 = pow(DX/DY,2.0)
-    coeff2 = -2.0*(1.0 + coeff1)
-
-    D[row][row - (NY+1)] = 1.0
-    D[row][row + (NY+1)] = 1.0
+    coeff1 = pow(DX,2.0)
+    coeff3 = pow(DY,2.0)
+    coeff2 = -2.0*(coeff1+coeff3)
+ 
+    D[row][row - (NY+1)] = coeff3
+    D[row][row + (NY+1)] = coeff3
     D[row][row - 1] = coeff1
     D[row][row + 1] = coeff1
     D[row][row] = coeff2  
 
+  PHI = zeros((pts))
+
   if type == "direct":
     PHI = direct.directly(D,potBC)
   elif type == "iterative":
-    PHI = iterate.iterative(D,potBC,tol)
+    PHI = iterate.iterative(PHI,D,potBC,tol)
   else:
     print "invalid type"
 
-  phi = empty((NX+1,NY+1))
   for i,j in ndindex(phi.shape):
     phi[i][j] = PHI[(NY+1)*i + j]
 
