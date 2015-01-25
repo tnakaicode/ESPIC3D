@@ -1,6 +1,10 @@
 from numpy import *
 import esSolve, sys, test, time
 
+# TO DO
+# 1. Add tests that should fail? Fncs that don't obey Laplace eq
+# 2. passing of cosh*cos tests depends greatly on DX,DY,DZ. investgate further
+
 #tol = float((sys.argv)[1])
 tol = 1.0e-3
 
@@ -15,20 +19,31 @@ print "*** 1D Tests ***"
 
 start = time.time()
 
-N = 10
-V0 = 1.0
-VN = 2.0
-inc = (VN - V0)/N
+NX = 10
+LX = 1.2
+DX = LX / NX
 
 # USE THIS
 X0 = 0.0
 
-potAccept1D = arange(V0, VN + inc, inc)
-potDirect1D = esSolve.laplace1D(N,V0,VN,"direct",tol)
-potIterative1D = esSolve.laplace1D(N,V0,VN,"iterative",tol)
+def test1D(func):
+  potAccept1D = zeros(NX+1)
+  for i in xrange(NX+1):
+    potAccept1D[i] = func(DX*i)
 
-test.test(potDirect1D,potAccept1D,tol,"direct")
-test.test(potIterative1D,potAccept1D,tol,"iterative")
+  V0 = potAccept1D[0]
+  VN = potAccept1D[NX]
+
+  potDirect1D = esSolve.laplace1D(NX,V0,VN,"direct",tol)
+  potIterative1D = esSolve.laplace1D(NX,V0,VN,"iterative",tol)
+
+  test.test(potDirect1D,potAccept1D,tol,"direct")
+  test.test(potIterative1D,potAccept1D,tol,"iterative")
+
+def V1_1D(x):
+  return 1.0*x + 2.0
+
+test1D(V1_1D)
 
 timeTook(start)
 
@@ -42,7 +57,7 @@ print "*** 2D Tests ***"
 start = time.time()
 
 NX = 6
-NY = 8
+NY = 7
 
 LX = 1.25
 LY = 2.3
@@ -71,22 +86,27 @@ def test2D(func):
   test.test(potDirect2D,potAccept2D,tol,"direct")
   test.test(potIterative2D,potAccept2D,tol,"iterative")
 
-def V1(x,y):
+def V1_2D(x,y):
   return 0.5*(pow(x,2.0) - pow(y,2.0))
 
-def V2(x,y):
+def V2_2D(x,y):
   return 2.0*x + 0.5*y
 
-def V3(x,y):
+def V3_2D(x,y):
   return 2.0
 
-def V4(x,y):
-  return V1(x,y) + V2(x,y) + V3(x,y)
+def V4_2D(x,y):
+  a = 0.1*2.0*pi/LX
+  return (cos(a*x)+sin(a*x))*(cosh(a*y)+sinh(a*y))
+ 
+def V5_2D(x,y):
+  return V1_2D(x,y) + V2_2D(x,y) + V3_2D(x,y)
 
-test2D(V1)
-test2D(V2)
-test2D(V3)
-test2D(V4)
+test2D(V1_2D)
+test2D(V2_2D)
+test2D(V3_2D)
+test2D(V4_2D)
+test2D(V5_2D)
 
 timeTook(start)
 
@@ -99,8 +119,8 @@ print "*** 3D Tests ***"
 
 start = time.time()
 
-NX = 6
-NY = 8
+NX = 5
+NY = 6
 NZ = 7
 
 LX = 1.25
@@ -135,9 +155,22 @@ def test3D(func):
   test.test(potDirect3D,potAccept3D,tol,"direct")
   test.test(potIterative3D,potAccept3D,tol,"iterative")
 
-def V1(x,y,z):
-  return 0.5*(pow(x,2.0) - pow(y,2.0)) + 2.0*z
+def V1_3D(x,y,z):
+  return 0.5*V5_2D(x,y) + 2.0*z
 
-test3D(V1)
+def V2_3D(x,y,z):
+  return 0.5*V5_2D(x,z) + 2.0*y
+
+def V3_3D(x,y,z):
+  return 0.5*V5_2D(y,z) + 2.0*x
+
+def V4_3D(x,y,z):
+  a = 0.1*2.0*pi/max(LX,LY)
+  return exp(a*x)*exp(a*y)*sin(sqrt(2.0)*a*z)
+
+test3D(V1_3D)
+test3D(V2_3D)
+test3D(V3_3D)
+test3D(V4_3D)
 
 timeTook(start)
