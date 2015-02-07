@@ -8,11 +8,11 @@ import iterate,direct
 # 3. Parallelize
 # 4. Look at http://wiki.scipy.org/PerformancePython
 
-def solver(solType,phi,D,potBC,tol):
+def solver(solType,D,potBC,tol):
   if solType == "direct":
     return direct.directly(D,potBC)
   elif solType == "iterative":
-    return iterate.iterative(phi,D,potBC,tol)
+    return iterate.iterative(D,potBC,tol)
   else:
     print "invalid type"
     return 0
@@ -38,9 +38,7 @@ def laplace1D(N,V0,VN,solType,tol):
       D[row][row+1] = 1.0
       D[row][row] = -2.0  
 
-  phi = zeros((pts))
-
-  return solver(solType,phi,D,potBC,tol)
+  return solver(solType,D,potBC,tol)
 
 ######
 # 2D #
@@ -51,8 +49,6 @@ def laplace1D(N,V0,VN,solType,tol):
 # Should there be a check that V0x[0] = V0y[0] ?
 
 def laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,solType,tol):
-  phi = zeros((NX+1,NY+1))
-
   pts = (NX + 1)*(NY + 1)
   D = zeros(shape=(pts,pts))
   potBC = zeros(shape=(pts))
@@ -101,10 +97,9 @@ def laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,solType,tol):
     D[row][row + 1] = coeff1
     D[row][row] = coeff2  
 
-  PHI = zeros((pts))
+  PHI = solver(solType,D,potBC,tol)
 
-  PHI = solver(solType,PHI,D,potBC,tol)
-
+  phi = zeros((NX+1,NY+1))
   for i,j in ndindex(phi.shape):
     phi[i][j] = PHI[(NY+1)*i + j]
 
@@ -119,8 +114,6 @@ def laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,solType,tol):
 # Should there be a check that V0x[0] = V0y[0] ?
 
 def laplace3D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,NZ,DZ,V0z,VNz,solType,tol):
-  phi = zeros((NX+1,NY+1,NZ+1))
-
   pts = (NX + 1)*(NY + 1)*(NZ + 1)
   D = zeros(shape=(pts,pts))
   potBC = zeros(shape=(pts))
@@ -189,10 +182,9 @@ def laplace3D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,NZ,DZ,V0z,VNz,solType,tol):
     D[row][row + 1] = coeffZ
     D[row][row] = coeffXYZ
 
-  PHI = zeros((pts))
+  PHI = solver(solType,D,potBC,tol)
 
-  PHI = solver(solType,PHI,D,potBC,tol)
-
+  phi = zeros((NX+1,NY+1,NZ+1))
   for i,j,k in ndindex(phi.shape):
     phi[i][j][k] = PHI[(NZ+1)*(NY+1)*i+(NZ+1)*j+k]
 

@@ -19,7 +19,8 @@ def keepGoing(old,new,tol):
   else:
     return 1
 
-def iterative(x,D,potBC,tol):
+def iterative(D,potBC,tol):
+  x = zeros(((potBC.shape)[0]))
   oldX = copy(x)
   count = 0
   while keepGoing(oldX,x,tol) == 1 or count == 0:
