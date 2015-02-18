@@ -34,8 +34,8 @@ def test1D(func):
   V0 = potAccept1D[0]
   VN = potAccept1D[NX]
 
-  potDirect1D = esSolve.laplace1D(NX,V0,VN,"direct",tol)
-  potIterative1D = esSolve.laplace1D(NX,V0,VN,"iterative",tol)
+  potDirect1D = esSolve.laplace1D(NX,DX,V0,VN,"direct",tol)
+  potIterative1D = esSolve.laplace1D(NX,DX,V0,VN,"iterative",tol)
 
   test.test(potDirect1D,potAccept1D,tol,"direct")
   test.test(potIterative1D,potAccept1D,tol,"iterative")

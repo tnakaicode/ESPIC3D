@@ -3,7 +3,6 @@ import math
 
 # TO DO
 # 1. iterative won't work if D[i][i] = 0, decide how to handle that
-# 2. 
 
 # This function is equivalent to the Jacobi Iteration method.
 
