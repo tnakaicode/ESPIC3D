@@ -4,11 +4,10 @@ import iterate,direct
 ######################################################
 # TO DO
 # 1. Neumann BCs
-# 2. Make a single laplace solver that 1d,2d,3d call
-# 3. Poisson
-# 4. Parallelize
-# 5. Look at http://wiki.scipy.org/PerformancePython
-# 6. Should there be a check that V0x[0] = V0y[0] ?
+# 2. Poisson
+# 3. Parallelize
+# 4. Look at http://wiki.scipy.org/PerformancePython
+# 5. Should there be a check that V0x[0] = V0y[0] ?
 ######################################################
 
 # PHI[i] = phi[i]
