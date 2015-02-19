@@ -16,20 +16,18 @@ def oneDindex(N,i,j,k):
   return (N[2]+1)*(N[1]+1)*i+(N[2]+1)*j+k
 
 def useBCs(index1,index2,V1,V2,potBC,D,rowsNotBC):
-  if index1 not in rowsNotBC:
-    if potBC[index1] != V1:
-      print "inconsistent BCs"
-  else:  
-    potBC[index1] = V1
-    D[index1][index1] = 1.0
-    rowsNotBC.remove(index1)
-  if index2 not in rowsNotBC:
-    if potBC[index2] != V2:
-      print "inconsistent BCs"
-  else:  
-    potBC[index2] = V2
-    D[index2][index2] = 1.0
-    rowsNotBC.remove(index2)
+  indexes = [index1,index2]
+  V = [V1,V2]
+  for i in xrange(2):
+    index = indexes[i]
+    myV = V[i]
+    if index not in rowsNotBC:
+      if potBC[index] != myV:
+        print "inconsistent BCs"
+    else:  
+      potBC[index] = myV
+      D[index][index] = 1.0
+      rowsNotBC.remove(index)
 
 def laplace1D(NX,DX,V0x,VNx,solType,tol):
   return laplace([NX,0,0],[DX,1.0,1.0],[V0x],[VNx],solType,tol)
