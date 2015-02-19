@@ -7,7 +7,6 @@ import iterate,direct
 # 2. Poisson
 # 3. Parallelize
 # 4. Look at http://wiki.scipy.org/PerformancePython
-# 5. Should there be a check that V0x[0] = V0y[0] ?
 ######################################################
 
 # PHI[i] = phi[i]
@@ -17,13 +16,19 @@ def oneDindex(N,i,j,k):
   return (N[2]+1)*(N[1]+1)*i+(N[2]+1)*j+k
 
 def useBCs(index1,index2,V1,V2,potBC,D,rowsNotBC):
-  potBC[index1] = V1
-  potBC[index2] = V2
-  D[index1][index1] = 1.0
-  D[index2][index2] = 1.0
-  if index1 in rowsNotBC:
+  if index1 not in rowsNotBC:
+    if potBC[index1] != V1:
+      print "inconsistent BCs"
+  else:  
+    potBC[index1] = V1
+    D[index1][index1] = 1.0
     rowsNotBC.remove(index1)
-  if index2 in rowsNotBC:
+  if index2 not in rowsNotBC:
+    if potBC[index2] != V2:
+      print "inconsistent BCs"
+  else:  
+    potBC[index2] = V2
+    D[index2][index2] = 1.0
     rowsNotBC.remove(index2)
 
 def laplace1D(NX,DX,V0x,VNx,solType,tol):
@@ -37,18 +42,15 @@ def laplace3D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,NZ,DZ,V0z,VNz,solType,tol):
 
 ### General Laplace Solver ###
 def laplace(N,D,V0,VN,solType,tol):
-  NX = N[0]
-  NY = N[1]
-  NZ = N[2]
-  DX = D[0]
-  DY = D[1]
-  DZ = D[2]
+  (NX,NY,NZ) = (N[0],N[1],N[2])
+  (DX,DY,DZ) = (D[0],D[1],D[2])
   pts = (NX+1)*(NY+1)*(NZ+1)
   D = zeros(shape=(pts,pts))
   potBC = zeros(shape=(pts))
   PHI = zeros(shape=(pts))
   rowsNotBC = [i for i in xrange(pts)]
 
+  # Set up rows corresponding to a boundary condition
   for j in xrange(NY+1):
     for k in xrange(NZ+1):
       if NY == 0 and NZ == 0:
@@ -71,6 +73,7 @@ def laplace(N,D,V0,VN,solType,tol):
         for j in xrange(NY+1):
           useBCs(oneDindex(N,i,j,0),oneDindex(N,i,j,NZ),V0[2][i][j],VN[2][i][j],potBC,D,rowsNotBC)
 
+  # Set up rows not corresponding to a boundary condition
   for row in rowsNotBC:
     coeffX = pow(DY*DZ,2.0)
     if NY == 0.0:
@@ -93,6 +96,7 @@ def laplace(N,D,V0,VN,solType,tol):
       D[row][row + 1] = coeffZ
     D[row][row] = coeffXYZ
 
+  # Solve linear system D * PHI = potBC
   if solType == "direct":
     PHI = direct.directly(D,potBC)
   elif solType == "iterative":
@@ -100,6 +104,7 @@ def laplace(N,D,V0,VN,solType,tol):
   else:
     print "invalid type"
 
+  # Convert 1-d PHI to dim-D phi
   if NY == 0 and NZ == 0:
     phi = zeros(NX+1)
     for i in xrange(len(phi)):
