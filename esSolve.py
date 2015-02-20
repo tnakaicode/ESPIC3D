@@ -9,10 +9,12 @@ import iterate,direct
 # 4. Look at http://wiki.scipy.org/PerformancePython
 ######################################################
 
-# PHI[i] = phi[i]
-# PHI[(Ny+1)*i + j] = phi[i][j]
-# PHI[(Nz+1)*(Ny+1)*i+(Nz+1)*j+k] = phi[i][j][k]
-def oneDindex(N,i,j,k):
+# This function puts a 3d array on a grid with
+# indicies (i,j,k) into a 1d array. 
+#   PHI[i] = phi[i]
+#   PHI[(Ny+1)*i + j] = phi[i][j]
+#   PHI[(Nz+1)*(Ny+1)*i+(Nz+1)*j+k] = phi[i][j][k]
+def indexTo1D(N,i,j,k):
   return (N[2]+1)*(N[1]+1)*i+(N[2]+1)*j+k
 
 def useBCs(index1,index2,V1,V2,potBC,D,rowsNotBC):
@@ -52,24 +54,24 @@ def laplace(N,D,V0,VN,solType,tol):
   for j in xrange(NY+1):
     for k in xrange(NZ+1):
       if NY == 0 and NZ == 0:
-        useBCs(oneDindex(N,0,j,k),oneDindex(N,NX,j,k),V0[0],VN[0],potBC,D,rowsNotBC)
+        useBCs(indexTo1D(N,0,j,k),indexTo1D(N,NX,j,k),V0[0],VN[0],potBC,D,rowsNotBC)
       if NY != 0 and NZ == 0:
-        useBCs(oneDindex(N,0,j,k),oneDindex(N,NX,j,k),V0[0][j],VN[0][j],potBC,D,rowsNotBC)
+        useBCs(indexTo1D(N,0,j,k),indexTo1D(N,NX,j,k),V0[0][j],VN[0][j],potBC,D,rowsNotBC)
       if NY != 0 and NZ != 0:
-        useBCs(oneDindex(N,0,j,k),oneDindex(N,NX,j,k),V0[0][j][k],VN[0][j][k],potBC,D,rowsNotBC)
+        useBCs(indexTo1D(N,0,j,k),indexTo1D(N,NX,j,k),V0[0][j][k],VN[0][j][k],potBC,D,rowsNotBC)
 
   if NY > 0:
     for i in xrange(NX+1):
       for k in xrange(NZ+1):
         if NZ == 0:
-          useBCs(oneDindex(N,i,0,k),oneDindex(N,i,NY,k),V0[1][i],VN[1][i],potBC,D,rowsNotBC)
+          useBCs(indexTo1D(N,i,0,k),indexTo1D(N,i,NY,k),V0[1][i],VN[1][i],potBC,D,rowsNotBC)
         else:
-          useBCs(oneDindex(N,i,0,k),oneDindex(N,i,NY,k),V0[1][i][k],VN[1][i][k],potBC,D,rowsNotBC)
+          useBCs(indexTo1D(N,i,0,k),indexTo1D(N,i,NY,k),V0[1][i][k],VN[1][i][k],potBC,D,rowsNotBC)
 
     if NZ > 0:
       for i in xrange(NX+1):
         for j in xrange(NY+1):
-          useBCs(oneDindex(N,i,j,0),oneDindex(N,i,j,NZ),V0[2][i][j],VN[2][i][j],potBC,D,rowsNotBC)
+          useBCs(indexTo1D(N,i,j,0),indexTo1D(N,i,j,NZ),V0[2][i][j],VN[2][i][j],potBC,D,rowsNotBC)
 
   # Set up rows not corresponding to a boundary condition
   for row in rowsNotBC:
@@ -106,16 +108,16 @@ def laplace(N,D,V0,VN,solType,tol):
   if NY == 0 and NZ == 0:
     phi = zeros(NX+1)
     for i in xrange(len(phi)):
-      phi[i] = PHI[oneDindex(N,i,0,0)]
+      phi[i] = PHI[indexTo1D(N,i,0,0)]
 
   elif NY != 0 and NZ == 0:
     phi = zeros((NX+1,NY+1))
     for i,j in ndindex(phi.shape):
-      phi[i][j] = PHI[oneDindex(N,i,j,0)]
+      phi[i][j] = PHI[indexTo1D(N,i,j,0)]
 
   else:
     phi = zeros((NX+1,NY+1,NZ+1))
     for i,j,k in ndindex(phi.shape):
-      phi[i][j][k] = PHI[oneDindex(N,i,j,k)]
+      phi[i][j][k] = PHI[indexTo1D(N,i,j,k)]
 
   return phi
