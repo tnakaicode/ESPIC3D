@@ -3,10 +3,10 @@ import math
 
 # TO DO
 # 1. won't work if D[i][i] = 0, decide how to handle
+# 2. tol = tol/100.0 is temporary
 #####################################################
 
 def keepGoing(old,new,tol):
-  # TEMPORARY
   tol = tol/100.0
   stillGTtol = 0
   for i in ndindex(old.shape):

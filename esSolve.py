@@ -1,7 +1,6 @@
 from numpy import *
 import iterate,direct
 
-######################################################
 # TO DO
 # 1. Neumann BCs
 # 2. Poisson

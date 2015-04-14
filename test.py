@@ -1,5 +1,9 @@
 from numpy import *
 
+# TO DO
+# 1. Should use a python testing framework
+###########################################
+
 def test(calc,accept,tol,name):
   numPass = 0
   numTest = 0
