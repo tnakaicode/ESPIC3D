@@ -1,13 +1,6 @@
 from numpy import *
 import iterate,direct
 
-# TO DO
-# 1. Neumann BCs
-# 2. Poisson
-# 3. Parallelize
-# 4. Look at http://wiki.scipy.org/PerformancePython
-######################################################
-
 # This function puts a 3d array on a grid with
 # indicies (i,j,k) into a 1d array. 
 #   PHI[i] = phi[i]

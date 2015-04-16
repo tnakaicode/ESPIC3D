@@ -1,10 +1,6 @@
 from numpy import *
 import esSolve, sys, test, time
 
-# TO DO
-# 1. Add tests that should fail? Fncs that don't obey Laplace eq
-# 2. passing of cosh*cos tests depends greatly on DX,DY,DZ. investgate further
-
 #tol = float((sys.argv)[1])
 tol = 1.0e-3
 

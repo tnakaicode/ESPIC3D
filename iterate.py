@@ -1,11 +1,6 @@
 from numpy import *
 import math
 
-# TO DO
-# 1. won't work if D[i][i] = 0, decide how to handle
-# 2. tol = tol/100.0 is temporary
-#####################################################
-
 def keepGoing(old,new,tol):
   tol = tol/100.0
   stillGTtol = 0
@@ -18,7 +13,7 @@ def keepGoing(old,new,tol):
     return 1
 
 # Solves A x = B iteratively
-# This function is equivalent to the Jacobi Iteration method.
+# This function is equivalent to the Jacobi relaxation method.
 def iterative(A,B,tol):
   x = zeros(((B.shape)[0]))
   oldX = copy(x)
