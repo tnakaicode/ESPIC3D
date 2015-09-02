@@ -1,7 +1,11 @@
 from numpy import *
 import esSolve, sys, test, time
+import pytest
+
+######################
 
 #tol = float((sys.argv)[1])
+absoluteTolerance = 1.0e-3
 tol = 1.0e-3
 
 def timeTook(start):
@@ -42,6 +46,14 @@ def V1_1D(x):
 test1D(V1_1D)
 
 timeTook(start)
+
+#@pytest.fixture(params = [()])
+#def data(request):
+#  return request.param
+
+#def test_1D(data):
+#  calculated,accepted = data
+#  assert np.allclose(calculated, accepted, 0.0, absoluteTolerance)
 
 ######
 # 2D #
