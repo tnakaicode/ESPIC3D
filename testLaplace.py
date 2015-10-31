@@ -38,7 +38,6 @@ X0 = 0.0
 def test1D(func):
   potAccept1D = np.zeros(NX+1)
   for i in xrange(NX+1):
-    # TODO: this needs to be a numpy array
     potAccept1D[i] = func(DX*i)
 
   V0 = potAccept1D[0]
@@ -90,7 +89,6 @@ Y0 = 0.0
 def test2D(func):
   potAccept2D = np.zeros((NX+1,NY+1))
   for i,j in np.ndindex(potAccept2D.shape):
-    # TODO: this needs to be a numpy array
     potAccept2D[i][j] = func(DX*i,DY*j)
 
   # Boundary conditions
@@ -155,7 +153,6 @@ Z0 = 0.0
 def test3D(func):
   potAccept3D = np.zeros((NX+1,NY+1,NZ+1))
   for i,j,k in np.ndindex(potAccept3D.shape):
-    # TODO: this needs to be a numpy array
     potAccept3D[i][j][k] = func(DX*i,DY*j,DZ*k)
 
   # Boundary conditions
