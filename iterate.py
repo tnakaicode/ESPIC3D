@@ -2,7 +2,7 @@ from numpy import *
 import math
 
 def keepGoing(old,new,tol):
-  tol = tol/100.0
+  tol = tol/1.0e3
   stillGTtol = 0
   for i in ndindex(old.shape):
     if abs(old[i] - new[i]) > tol:
