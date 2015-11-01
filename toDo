@@ -1,17 +1,20 @@
 0. methods in esSolve should be broken up, and then test these individually
 
-1. Implement own direct solver instead of linalg.solve?
+1. esSolve assumes 2d means (x,y), 1d means (x) ?
 
-2. Solver:
+2. Implement own direct solver instead of linalg.solve?
+
+3. Solver:
      Neumann BCs
      Poisson
      Parallelize / cython, http://wiki.scipy.org/PerformancePython
 
-3. Iterative method:
+4. Iterative method:
      won't work if D[i][i] = 0, decide how to handle
      tol = tol/100.0 is temporary
 
-4. Tests:
+5. Tests:
+     categorize into unit (don't have) and functional (currently testLaplace)
      use something like py.test instead
      Add tests that should fail? Fncs that don't obey Laplace eq
      passing of cosh*cos tests depends greatly on DX,DY,DZ. investgate further 
