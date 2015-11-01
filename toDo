@@ -1,3 +1,5 @@
+0. methods in esSolve should be broken up, and then test these individually
+
 1. Implement own direct solver instead of linalg.solve?
 
 2. Solver:
