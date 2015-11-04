@@ -1,5 +1,5 @@
 import numpy as np
-import iterate,direct
+import linAlgSolve
 
 # This function puts a 3d array on a grid with
 # indicies (i,j,k) into a 1d array. 
@@ -23,17 +23,17 @@ def useBCs(index1,index2,V1,V2,potBC,D,rowsNotBC):
       D[index][index] = 1.0
       rowsNotBC.remove(index)
 
-def laplace1D(NX,DX,V0x,VNx,solType,tol):
-  return laplace([NX,0,0],[DX,1.0,1.0],[V0x],[VNx],solType,tol)
+def laplace1D(NX,DX,V0x,VNx,solType,relTol,absTol):
+  return laplace([NX,0,0],[DX,1.0,1.0],[V0x],[VNx],solType,relTol,absTol)
 
-def laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,solType,tol):
-  return laplace([NX,NY,0],[DX,DY,1.0],[V0x,V0y],[VNx,VNy],solType,tol)
+def laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,solType,relTol,absTol):
+  return laplace([NX,NY,0],[DX,DY,1.0],[V0x,V0y],[VNx,VNy],solType,relTol,absTol)
 
-def laplace3D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,NZ,DZ,V0z,VNz,solType,tol):
-  return laplace([NX,NY,NZ],[DX,DY,DZ],[V0x,V0y,V0z],[VNx,VNy,VNz],solType,tol)
+def laplace3D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,NZ,DZ,V0z,VNz,solType,relTol,absTol):
+  return laplace([NX,NY,NZ],[DX,DY,DZ],[V0x,V0y,V0z],[VNx,VNy,VNz],solType,relTol,absTol)
 
 ### General Laplace Solver ###
-def laplace(N,D,V0,VN,solType,tol):
+def laplace(N,D,V0,VN,solType,relTol,absTol):
   (NX,NY,NZ) = (N[0],N[1],N[2])
   (DX,DY,DZ) = (D[0],D[1],D[2])
   pts = (NX+1)*(NY+1)*(NZ+1)
@@ -90,9 +90,9 @@ def laplace(N,D,V0,VN,solType,tol):
 
   # Solve linear system D * PHI = potBC
   if solType == "direct":
-    PHI = direct.directly(D,potBC)
+    PHI = linAlgSolve.direct(D,potBC)
   elif solType == "iterative":
-    PHI = iterate.iterative(D,potBC,tol)
+    PHI = linAlgSolve.iterate(D,potBC,relTol,absTol)
   else:
     print("invalid type")
 
