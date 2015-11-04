@@ -9,9 +9,7 @@
      Poisson
      Parallelize / cython, http://wiki.scipy.org/PerformancePython
 
-4. Iterative method:
-     won't work if D[i][i] = 0, decide how to handle
-     tol = tol/100.0 is temporary
+4. iterative: use absolute tolerance?
 
 5. Tests:
      categorize into unit (don't have) and functional (currently testLaplace)
