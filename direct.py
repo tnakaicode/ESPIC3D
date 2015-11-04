@@ -1,6 +1,5 @@
-from numpy import *
-import math
+import numpy as np
 
 # Solves A x = B directly
 def directly(A,B):
-  return linalg.solve(A,B)
+  return np.linalg.solve(A,B)

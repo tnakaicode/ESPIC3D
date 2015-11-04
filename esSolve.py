@@ -1,4 +1,4 @@
-from numpy import *
+import numpy as np
 import iterate,direct
 
 # This function puts a 3d array on a grid with
@@ -12,12 +12,12 @@ def indexTo1D(N,i,j,k):
 def useBCs(index1,index2,V1,V2,potBC,D,rowsNotBC):
   indexes = [index1,index2]
   V = [V1,V2]
-  for i in xrange(2):
+  for i in range(2):
     index = indexes[i]
     myV = V[i]
     if index not in rowsNotBC:
       if potBC[index] != myV:
-        print "inconsistent BCs"
+        print("inconsistent BCs")
     else:  
       potBC[index] = myV
       D[index][index] = 1.0
@@ -37,14 +37,14 @@ def laplace(N,D,V0,VN,solType,tol):
   (NX,NY,NZ) = (N[0],N[1],N[2])
   (DX,DY,DZ) = (D[0],D[1],D[2])
   pts = (NX+1)*(NY+1)*(NZ+1)
-  D = zeros(shape=(pts,pts))
-  potBC = zeros(shape=(pts))
-  PHI = zeros(shape=(pts))
-  rowsNotBC = [i for i in xrange(pts)]
+  D = np.zeros(shape=(pts,pts))
+  potBC = np.zeros(shape=(pts))
+  PHI = np.zeros(shape=(pts))
+  rowsNotBC = [i for i in range(pts)]
 
   # Set up rows corresponding to a boundary condition
-  for j in xrange(NY+1):
-    for k in xrange(NZ+1):
+  for j in range(NY+1):
+    for k in range(NZ+1):
       if NY == 0 and NZ == 0:
         useBCs(indexTo1D(N,0,j,k),indexTo1D(N,NX,j,k),V0[0],VN[0],potBC,D,rowsNotBC)
       if NY != 0 and NZ == 0:
@@ -53,16 +53,16 @@ def laplace(N,D,V0,VN,solType,tol):
         useBCs(indexTo1D(N,0,j,k),indexTo1D(N,NX,j,k),V0[0][j][k],VN[0][j][k],potBC,D,rowsNotBC)
 
   if NY > 0:
-    for i in xrange(NX+1):
-      for k in xrange(NZ+1):
+    for i in range(NX+1):
+      for k in range(NZ+1):
         if NZ == 0:
           useBCs(indexTo1D(N,i,0,k),indexTo1D(N,i,NY,k),V0[1][i],VN[1][i],potBC,D,rowsNotBC)
         else:
           useBCs(indexTo1D(N,i,0,k),indexTo1D(N,i,NY,k),V0[1][i][k],VN[1][i][k],potBC,D,rowsNotBC)
 
     if NZ > 0:
-      for i in xrange(NX+1):
-        for j in xrange(NY+1):
+      for i in range(NX+1):
+        for j in range(NY+1):
           useBCs(indexTo1D(N,i,j,0),indexTo1D(N,i,j,NZ),V0[2][i][j],VN[2][i][j],potBC,D,rowsNotBC)
 
   # Set up rows not corresponding to a boundary condition
@@ -94,22 +94,22 @@ def laplace(N,D,V0,VN,solType,tol):
   elif solType == "iterative":
     PHI = iterate.iterative(D,potBC,tol)
   else:
-    print "invalid type"
+    print("invalid type")
 
   # Convert 1-d PHI to dim-D phi
   if NY == 0 and NZ == 0:
-    phi = zeros(NX+1)
-    for i in xrange(len(phi)):
+    phi = np.zeros(NX+1)
+    for i in range(len(phi)):
       phi[i] = PHI[indexTo1D(N,i,0,0)]
 
   elif NY != 0 and NZ == 0:
-    phi = zeros((NX+1,NY+1))
-    for i,j in ndindex(phi.shape):
+    phi = np.zeros((NX+1,NY+1))
+    for i,j in np.ndindex(phi.shape):
       phi[i][j] = PHI[indexTo1D(N,i,j,0)]
 
   else:
-    phi = zeros((NX+1,NY+1,NZ+1))
-    for i,j,k in ndindex(phi.shape):
+    phi = np.zeros((NX+1,NY+1,NZ+1))
+    for i,j,k in np.ndindex(phi.shape):
       phi[i][j][k] = PHI[indexTo1D(N,i,j,k)]
 
   return phi
