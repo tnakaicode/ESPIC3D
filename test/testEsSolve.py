@@ -72,7 +72,7 @@ def test_laplace():
   def test1D(func):
     potAccept1D = np.zeros(NX_1D+1)
     for i in range(NX_1D+1):
-      potAccept1D[i] = func(DX_1D*i)
+      potAccept1D[i] = func(X0_1D+DX_1D*i)
 
     # Boundary conditions
     V0_1D = potAccept1D[0]
@@ -87,7 +87,7 @@ def test_laplace():
   def test2D(func):
     potAccept2D = np.zeros((NX_2D+1,NY_2D+1))
     for i,j in np.ndindex(potAccept2D.shape):
-      potAccept2D[i][j] = func(DX_2D*i,DY_2D*j)
+      potAccept2D[i][j] = func(X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
 
     # Boundary conditions
     V0x_2D = [potAccept2D[0][j]     for j in range(NY_2D+1)]
@@ -104,7 +104,7 @@ def test_laplace():
   def test3D(func):
     potAccept3D = np.zeros((NX_3D+1,NY_3D+1,NZ_3D+1))
     for i,j,k in np.ndindex(potAccept3D.shape):
-      potAccept3D[i][j][k] = func(DX_3D*i,DY_3D*j,DZ_3D*k)
+      potAccept3D[i][j][k] = func(X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
 
     # Boundary conditions
     V0x_3D = [[potAccept3D[0][j][k]     for k in range(NZ_3D+1)] for j in range(NY_3D+1)]

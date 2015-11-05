@@ -13,6 +13,5 @@
               gauss seidel
 
 5. Tests:
-     not using X0, Y0, Z0
      Add tests that should fail? Fncs that don't obey Laplace eq
      passing of cosh*cos tests depends greatly on DX,DY,DZ. investgate further 
