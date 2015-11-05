@@ -8,7 +8,7 @@ relTol = 1.0e-3
 NX_1D = 10
 LX_1D = 1.2
 DX_1D = LX_1D / NX_1D
-X0_1D = 0.0
+X0_1D = 1.0
 
 NX_2D = 6
 NY_2D = 7
@@ -16,8 +16,8 @@ LX_2D = 1.25
 LY_2D = 2.3
 DX_2D = LX_2D / NX_2D
 DY_2D = LY_2D / NY_2D
-X0_2D = 0.0
-Y0_2D = 0.0
+X0_2D = 1.0
+Y0_2D = 2.0
 
 NX_3D = 5
 NY_3D = 6
@@ -28,9 +28,9 @@ LZ_3D = 1.87
 DX_3D = LX_3D / NX_3D
 DY_3D = LY_3D / NY_3D
 DZ_3D = LZ_3D / NZ_3D
-X0_3D = 0.0
-Y0_3D = 0.0
-Z0_3D = 0.0
+X0_3D = 1.0
+Y0_3D = 2.0
+Z0_3D = 3.0
 
 def V1_1D(x):
   return 1.0*x + 2.0
