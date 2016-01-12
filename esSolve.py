@@ -23,6 +23,43 @@ def useBCs(index1,index2,V1,V2,potBC,D,rowsNotBC):
       D[index][index] = 1.0
       rowsNotBC.remove(index)
 
+# Takes 1-D array and puts it on the computational grid
+# returning a d-D array
+def putPotentialOnGrid(N,PHI):
+  (NX,NY,NZ) = (N[0],N[1],N[2])
+  if NY == 0 and NZ == 0:
+    phi = np.zeros(NX+1)
+    for i in range(len(phi)):
+      phi[i] = PHI[indexTo1D(N,i,0,0)]
+
+  elif NY != 0 and NZ == 0:
+    phi = np.zeros((NX+1,NY+1))
+    for i,j in np.ndindex(phi.shape):
+      phi[i][j] = PHI[indexTo1D(N,i,j,0)]
+
+  else:
+    phi = np.zeros((NX+1,NY+1,NZ+1))
+    for i,j,k in np.ndindex(phi.shape):
+      phi[i][j][k] = PHI[indexTo1D(N,i,j,k)]
+
+  return phi
+
+# Solve linear system A x = B
+def solveLinearSystem(A,B,relTol,absTol,solType):
+  if solType == "direct":
+    x = linAlgSolve.direct(A,B)
+  elif solType == "iterative":
+    x = linAlgSolve.iterate(A,B,relTol,absTol)
+  else:
+    sys.exit("esSolve::solveForPotential() -- invalid solution type")
+
+  return x
+
+# Solve linear system D * PHI = potBC but return
+# PHI on the computational grid
+def solveForPotential(N,D,potBC,relTol,absTol,solType):
+  return putPotentialOnGrid(N,solveLinearSystem(D,potBC,relTol,absTol,solType))
+
 def laplace1D(NX,DX,V0x,VNx,solType,relTol,absTol):
   return laplace([NX,0,0],[DX,1.0,1.0],[V0x],[VNx],solType,relTol,absTol)
 
@@ -39,7 +76,7 @@ def laplace(N,D,V0,VN,solType,relTol,absTol):
   pts = (NX+1)*(NY+1)*(NZ+1)
   D = np.zeros(shape=(pts,pts))
   potBC = np.zeros(shape=(pts))
-  PHI = np.zeros(shape=(pts))
+#  PHI = np.zeros(shape=(pts))
   rowsNotBC = [i for i in range(pts)]
 
   # Set up rows corresponding to a boundary condition
@@ -88,28 +125,4 @@ def laplace(N,D,V0,VN,solType,relTol,absTol):
       D[row][row + 1] = coeffZ
     D[row][row] = coeffXYZ
 
-  # Solve linear system D * PHI = potBC
-  if solType == "direct":
-    PHI = linAlgSolve.direct(D,potBC)
-  elif solType == "iterative":
-    PHI = linAlgSolve.iterate(D,potBC,relTol,absTol)
-  else:
-    print("invalid type")
-
-  # Convert 1-d PHI to dim-D phi
-  if NY == 0 and NZ == 0:
-    phi = np.zeros(NX+1)
-    for i in range(len(phi)):
-      phi[i] = PHI[indexTo1D(N,i,0,0)]
-
-  elif NY != 0 and NZ == 0:
-    phi = np.zeros((NX+1,NY+1))
-    for i,j in np.ndindex(phi.shape):
-      phi[i][j] = PHI[indexTo1D(N,i,j,0)]
-
-  else:
-    phi = np.zeros((NX+1,NY+1,NZ+1))
-    for i,j,k in np.ndindex(phi.shape):
-      phi[i][j][k] = PHI[indexTo1D(N,i,j,k)]
-
-  return phi
+  return solveForPotential(N,D,potBC,relTol,absTol,solType)
