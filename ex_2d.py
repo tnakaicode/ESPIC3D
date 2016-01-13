@@ -38,7 +38,7 @@ def plot2Darray(array2D):
   Y = np.arange(array2D.shape[1])
   X, Y = np.meshgrid(X, Y, indexing='ij')
 
-  ax.plot_wireframe(X, Y, array2D[:], rstride=10, cstride=10)
+  ax.plot_wireframe(X, Y, array2D[:])
   plt.show()
 
 plot2Darray(potential)
