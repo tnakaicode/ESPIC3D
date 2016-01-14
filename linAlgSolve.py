@@ -7,9 +7,10 @@ def iterate(A,B,relTol,absTol):
   x = np.copy(B)
   for j in range(maxIterations):
     oldX = np.copy(x)
+    AdotOldX = np.dot(A,oldX)
     for i in np.ndindex(x.shape):
       if A[i][i] != 0.0:  
-        x[i] = oldX[i] + (1.0/A[i][i])*(B[i] - np.dot(A,oldX)[i])
+        x[i] = oldX[i] + (1.0/A[i][i])*(B[i] - AdotOldX[i])
     if np.allclose(oldX,x,relTol/10.0,absTol/10.0) == True:
       break
   return x
