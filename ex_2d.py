@@ -7,8 +7,8 @@ import math
 
 plt.show()
 
-NX = 12
-NY = 13
+NX = 22
+NY = 23
 LX = 1.25
 LY = 2.3
 DX = LX / NX
