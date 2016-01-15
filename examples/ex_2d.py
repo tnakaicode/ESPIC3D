@@ -6,14 +6,14 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 import esSolve
 from mpl_toolkits.mplot3d import axes3d
 
-NX = 22
-NY = 23
+NX = 25
+NY = 30
 LX = 1.25
 LY = 2.3
 DX = LX / NX
 DY = LY / NY
-X0 = 1.0
-Y0 = 2.0
+#X0 = 1.0
+#Y0 = 2.0
 
 amplitude = 2.0
 

@@ -4,15 +4,15 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 import matplotlib.pyplot as plt
 import esSolve
 
-NX_1D   = 10
-LX_1D   = 1.2
+NX   = 10
+LX   = 1.2
 
-DX_1D   = LX_1D / NX_1D
+DX   = LX / NX
 
-V0_1D   = 1.0
-VN_1D   = 2.0
+V0   = 1.0
+VN   = 2.0
 
-pot1D = esSolve.laplace1D(NX_1D,DX_1D,V0_1D,VN_1D,"iterative",relTol=0.0,absTol=1.0e-3)
+pot1D = esSolve.laplace1D(NX,DX,V0,VN,"iterative",relTol=0.0,absTol=1.0e-3)
 
 plt.plot(pot1D)
 plt.show()
