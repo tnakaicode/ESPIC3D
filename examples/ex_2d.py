@@ -2,7 +2,7 @@ import os
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/..')
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 import esSolve
 from mpl_toolkits.mplot3d import axes3d
 
