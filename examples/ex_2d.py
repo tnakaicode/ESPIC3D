@@ -36,6 +36,7 @@ def plot2Darray(array2D):
   X = np.arange(array2D.shape[0])
   Y = np.arange(array2D.shape[1])
   X, Y = np.meshgrid(X, Y, indexing='ij')
+  # could use X0,Y0 here to plot versus position instead of index
 
   ax.plot_wireframe(X, Y, array2D[:])
   plt.show()
