@@ -12,8 +12,8 @@ LX = 1.25
 LY = 2.3
 DX = LX / NX
 DY = LY / NY
-#X0 = 1.0
-#Y0 = 2.0
+X0 = 1.0
+Y0 = 2.0
 
 amplitude = 2.0
 
@@ -33,10 +33,9 @@ def plot2Darray(array2D):
   fig = plt.figure()
   ax = fig.add_subplot(111, projection='3d')
 
-  X = np.arange(array2D.shape[0])
-  Y = np.arange(array2D.shape[1])
+  X = np.linspace(X0, X0 + LX, num=array2D.shape[0])
+  Y = np.linspace(Y0, Y0 + LY, num=array2D.shape[1])
   X, Y = np.meshgrid(X, Y, indexing='ij')
-  # could use X0,Y0 here to plot versus position instead of index
 
   ax.plot_wireframe(X, Y, array2D[:])
   plt.show()
