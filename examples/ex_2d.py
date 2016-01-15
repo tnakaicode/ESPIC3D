@@ -1,14 +1,10 @@
 import os
 import sys
-import matplotlib as ml
 import matplotlib.pyplot as plt
 import numpy as np
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/..')
 import esSolve
 from mpl_toolkits.mplot3d import axes3d
-import math
-
-plt.show()
 
 NX = 22
 NY = 23
