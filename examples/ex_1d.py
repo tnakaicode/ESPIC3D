@@ -1,5 +1,7 @@
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/..')
 import matplotlib.pyplot as plt
-
 import esSolve
 
 NX_1D   = 10
