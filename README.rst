@@ -4,7 +4,10 @@
 emSolve
 =======
 
-Electromagnetic field solver.
+Electrostatic and electromagnetic field solver.
+
+.. image:: images/ex_2d.png
+    :align: center
 
 Electrostatic Example
 ------------------
@@ -19,13 +22,6 @@ Electromagnetic Example
 .. code-block:: python
 
     >>> example code
-
-.. image:: images/ex_2d.png
-    :alt: blah
-    :width: 679
-    :height: 781
-    :align: center
-
 
 Tests
 ------------------
