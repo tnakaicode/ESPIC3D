@@ -65,6 +65,7 @@ def V3_3D(x,y,z):
 
 def V4_3D(x,y,z):
   a = 0.1*2.0*math.pi/max(LX_3D,LY_3D)
+# should these be using np versions?
   return math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z)
 
 
@@ -90,13 +91,13 @@ def test_laplace():
   def test2D(func):
     potAccept2D = np.zeros((NX_2D+1,NY_2D+1))
     for i,j in np.ndindex(potAccept2D.shape):
-      potAccept2D[i][j] = func(X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
+      potAccept2D[i,j] = func(X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
 
     # Boundary conditions
-    V0x_2D = [potAccept2D[0][j]     for j in range(NY_2D+1)]
-    VNx_2D = [potAccept2D[NX_2D][j] for j in range(NY_2D+1)]
-    V0y_2D = [potAccept2D[i][0]     for i in range(NX_2D+1)]
-    VNy_2D = [potAccept2D[i][NY_2D] for i in range(NX_2D+1)]
+    V0x_2D = potAccept2D[0,:]
+    VNx_2D = potAccept2D[NX_2D,:]
+    V0y_2D = potAccept2D[:,0]
+    VNy_2D = potAccept2D[:,NY_2D]
 
     potDirect2D    = esSolve.laplace2D(NX_2D,DX_2D,V0x_2D,VNx_2D,NY_2D,DY_2D,V0y_2D,VNy_2D,"direct")
     potIterative2D = esSolve.laplace2D(NX_2D,DX_2D,V0x_2D,VNx_2D,NY_2D,DY_2D,V0y_2D,VNy_2D,"iterative",relTol,absTol)
@@ -107,15 +108,16 @@ def test_laplace():
   def test3D(func):
     potAccept3D = np.zeros((NX_3D+1,NY_3D+1,NZ_3D+1))
     for i,j,k in np.ndindex(potAccept3D.shape):
-      potAccept3D[i][j][k] = func(X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
+      # consider using np.fromfunction here
+      potAccept3D[i,j,k] = func(X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
 
     # Boundary conditions
-    V0x_3D = [[potAccept3D[0][j][k]     for k in range(NZ_3D+1)] for j in range(NY_3D+1)]
-    VNx_3D = [[potAccept3D[NX_3D][j][k] for k in range(NZ_3D+1)] for j in range(NY_3D+1)]
-    V0y_3D = [[potAccept3D[i][0][k]     for k in range(NZ_3D+1)] for i in range(NX_3D+1)]
-    VNy_3D = [[potAccept3D[i][NY_3D][k] for k in range(NZ_3D+1)] for i in range(NX_3D+1)]
-    V0z_3D = [[potAccept3D[i][j][0]     for j in range(NY_3D+1)] for i in range(NX_3D+1)]
-    VNz_3D = [[potAccept3D[i][j][NZ_3D] for j in range(NY_3D+1)] for i in range(NX_3D+1)]
+    V0x_3D = potAccept3D[0,:,:]
+    VNx_3D = potAccept3D[NX_3D,:,:]
+    V0y_3D = potAccept3D[:,0,:]
+    VNy_3D = potAccept3D[:,NY_3D,:]
+    V0z_3D = potAccept3D[:,:,0]
+    VNz_3D = potAccept3D[:,:,NZ_3D]
 
     potDirect3D    = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D,NY_3D,DY_3D,V0y_3D,VNy_3D,NZ_3D,DZ_3D,V0z_3D,VNz_3D,"direct")
     potIterative3D = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D,NY_3D,DY_3D,V0y_3D,VNy_3D,NZ_3D,DZ_3D,V0z_3D,VNz_3D,"iterative",relTol,absTol)

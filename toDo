@@ -10,8 +10,8 @@
      http://wiki.scipy.org/PerformancePython
 
 4. iterative: use absolute tolerance?
-              gauss seidel
 
 5. Tests:
+     Really need to look into why increasing NX,NY,NZ makes tests fail
      Add tests that should fail? Fncs that don't obey Laplace eq
      passing of cosh*cos tests depends greatly on DX,DY,DZ. investgate further
