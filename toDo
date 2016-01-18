@@ -12,6 +12,5 @@
 4. iterative: use absolute tolerance?
 
 5. Tests:
-     Really need to look into why increasing NX,NY,NZ makes tests fail
+     Add tests that use different LX, DX, NX combinations to make sure always passes
      Add tests that should fail? Fncs that don't obey Laplace eq
-     passing of cosh*cos tests depends greatly on DX,DY,DZ. investgate further
