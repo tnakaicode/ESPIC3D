@@ -82,11 +82,13 @@ def test_laplace():
     V0_1D = potAccept1D[0]
     VN_1D = potAccept1D[NX_1D]
 
-    potDirect1D    = esSolve.laplace1D(NX_1D,DX_1D,V0_1D,VN_1D,"direct")
-    potIterative1D = esSolve.laplace1D(NX_1D,DX_1D,V0_1D,VN_1D,"iterative",relTol,absTol)
+    potDirect1D      = esSolve.laplace1D(NX_1D,DX_1D,V0_1D,VN_1D,"direct")
+    potJacobi1D      = esSolve.laplace1D(NX_1D,DX_1D,V0_1D,VN_1D,"jacobi",relTol,absTol)
+    potGaussSeidel1D = esSolve.laplace1D(NX_1D,DX_1D,V0_1D,VN_1D,"gaussSeidel",relTol,absTol)
 
     test(potDirect1D,potAccept1D)
-    test(potIterative1D,potAccept1D)
+    test(potJacobi1D,potAccept1D)
+    test(potGaussSeidel1D,potAccept1D)
 
   def test2D(func):
     potAccept2D = np.zeros((NX_2D+1,NY_2D+1))
@@ -99,11 +101,13 @@ def test_laplace():
     V0y_2D = potAccept2D[:,0]
     VNy_2D = potAccept2D[:,NY_2D]
 
-    potDirect2D    = esSolve.laplace2D(NX_2D,DX_2D,V0x_2D,VNx_2D,NY_2D,DY_2D,V0y_2D,VNy_2D,"direct")
-    potIterative2D = esSolve.laplace2D(NX_2D,DX_2D,V0x_2D,VNx_2D,NY_2D,DY_2D,V0y_2D,VNy_2D,"iterative",relTol,absTol)
+    potDirect2D      = esSolve.laplace2D(NX_2D,DX_2D,V0x_2D,VNx_2D,NY_2D,DY_2D,V0y_2D,VNy_2D,"direct")
+    potJacobi2D      = esSolve.laplace2D(NX_2D,DX_2D,V0x_2D,VNx_2D,NY_2D,DY_2D,V0y_2D,VNy_2D,"jacobi",relTol,absTol)
+    potGaussSeidel2D = esSolve.laplace2D(NX_2D,DX_2D,V0x_2D,VNx_2D,NY_2D,DY_2D,V0y_2D,VNy_2D,"gaussSeidel",relTol,absTol)
 
     test(potDirect2D,potAccept2D)
-    test(potIterative2D,potAccept2D)
+    test(potJacobi2D,potAccept2D)
+    test(potGaussSeidel2D,potAccept2D)
 
   def test3D(func):
     potAccept3D = np.zeros((NX_3D+1,NY_3D+1,NZ_3D+1))
@@ -119,11 +123,13 @@ def test_laplace():
     V0z_3D = potAccept3D[:,:,0]
     VNz_3D = potAccept3D[:,:,NZ_3D]
 
-    potDirect3D    = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D,NY_3D,DY_3D,V0y_3D,VNy_3D,NZ_3D,DZ_3D,V0z_3D,VNz_3D,"direct")
-    potIterative3D = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D,NY_3D,DY_3D,V0y_3D,VNy_3D,NZ_3D,DZ_3D,V0z_3D,VNz_3D,"iterative",relTol,absTol)
+    potDirect3D      = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D,NY_3D,DY_3D,V0y_3D,VNy_3D,NZ_3D,DZ_3D,V0z_3D,VNz_3D,"direct")
+    potJacobi3D      = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D,NY_3D,DY_3D,V0y_3D,VNy_3D,NZ_3D,DZ_3D,V0z_3D,VNz_3D,"jacobi",relTol,absTol)
+    potGaussSeidel3D = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D,NY_3D,DY_3D,V0y_3D,VNy_3D,NZ_3D,DZ_3D,V0z_3D,VNz_3D,"gaussSeidel",relTol,absTol)
 
     test(potDirect3D,potAccept3D)
-    test(potIterative3D,potAccept3D)
+    test(potJacobi3D,potAccept3D)
+    test(potGaussSeidel3D,potAccept3D)
 
   # Run the tests
   test1D(V1_1D)

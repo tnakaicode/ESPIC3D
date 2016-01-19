@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import linAlgSolve
 
@@ -59,8 +60,10 @@ def put1DArrayOnGrid(N,array):
 def solveLinearSystem(M,B,solType,relTol,absTol):
   if solType == "direct":
     x = linAlgSolve.direct(M,B)
-  elif solType == "iterative":
-    x = linAlgSolve.iterate(M,B,relTol,absTol)
+  elif solType == "jacobi":
+    x = linAlgSolve.jacobi(M,B,relTol,absTol)
+  elif solType == "gaussSeidel":
+    x = linAlgSolve.gaussSeidel(M,B,relTol,absTol)
   else:
     sys.exit("esSolve::solveLinearSystem() -- invalid solution type")
 

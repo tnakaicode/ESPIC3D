@@ -25,10 +25,12 @@ def testSolvers():
     assert np.allclose(array1,array2,relTol,absTol)
 
   def testCase(A,x,B):
-    x_Iterate = linAlgSolve.iterate(A,B,relTol,absTol)
-    x_Direct  = linAlgSolve.direct(A,B)
+    x_Jacobi      = linAlgSolve.jacobi(A,B,relTol,absTol)
+    x_GaussSeidel = linAlgSolve.gaussSeidel(A,B,relTol,absTol)
+    x_Direct      = linAlgSolve.direct(A,B)
  
-    test(x_Iterate,x)
+    test(x_Jacobi,x)
+    test(x_GaussSeidel,x)
     test(x_Direct,x)
 
   testCase(A1,x1,B1)

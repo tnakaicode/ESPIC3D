@@ -1,29 +1,29 @@
 import numpy as np
 
 # Solves A x = B iteratively
-# This function is equivalent to the Gauss Seidel  method.
-def iterate(A,B,relTol,absTol):
-  maxIterations = 10000
+def iterate(A,B,solType,relTol,absTol):
+  maxIterations = 1000000
   x = np.copy(B)
-  alphaRel = 100.0
-  alphaAbs = 100.0
-  relTol = relTol/alphaRel
-  absTol = absTol/alphaAbs
-  for j in range(maxIterations):
+  for iteration in range(maxIterations):
     oldX = np.copy(x)
-    # JACOBI
-    # AdotOldX = np.dot(A,oldX)
     for i in range(x.shape[0]):
       # should really first try to rearrange A,B to make A[i,i] != 0 if possible
       if A[i,i] != 0.0:
-        # JACOBI
-        # x[i] = oldX[i] + (1.0/A[i][i])*(B[i] - AdotOldX[i])
-
-        # GAUSS - SEIDEL
-        x[i] = (1.0/A[i][i])*(B[i] - np.dot(A[i,:i],x[:i]) - np.dot(A[i,i+1:], oldX[i+1:]))
-    if np.allclose(oldX,x,relTol,absTol) == True:
+        if (solType == "jacobi"):
+          x[i] = (1.0/A[i][i])*(B[i] - np.dot(A[i,:i],oldX[:i]) - np.dot(A[i,i+1:], oldX[i+1:]))
+        elif (solType == "gaussSeidel"):
+          x[i] = (1.0/A[i][i])*(B[i] - np.dot(A[i,:i],x[:i]) - np.dot(A[i,i+1:], oldX[i+1:]))
+    if np.allclose(oldX,x,relTol,absTol):
       break
   return x
+
+# Solves A x = B using Jacobi iteration
+def jacobi(A,B,relTol,absTol):
+  return iterate(A,B,"jacobi",relTol/1000.0,absTol/1000.0)
+
+# Solves A x = B using Gauss Seidel iteration
+def gaussSeidel(A,B,relTol,absTol):
+  return iterate(A,B,"gaussSeidel",relTol/100.0,absTol/100.0)
 
 # Solves A x = B directly
 def direct(A,B):
