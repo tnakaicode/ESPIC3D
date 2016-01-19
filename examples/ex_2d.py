@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import matplotlib.pyplot as plt
 import numpy as np
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
@@ -27,7 +28,13 @@ VNx = np.fromfunction(nonGroundedWall, (NY+1,))
 V0y = np.zeros((NX+1))
 VNy = np.zeros((NX+1))
 
-potential = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"iterative",relTol=0.0,absTol=1.0e-3)
+start = time.clock()
+
+potential = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0e-3)
+
+end = time.clock()
+
+print("That took",round(end-start,1),"seconds.")
 
 def plot2Darray(array2D):
   fig = plt.figure()

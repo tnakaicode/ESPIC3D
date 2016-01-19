@@ -9,8 +9,4 @@
 3. Parallelize: CUDA, OpenMP / MPI
      http://wiki.scipy.org/PerformancePython
 
-4. iterative: use absolute tolerance?
-
-5. Tests:
-     Add tests that use different LX, DX, NX combinations to make sure always passes
-     Add tests that should fail? Fncs that don't obey Laplace eq
+4. should test absolute in addition to relative tolerance
