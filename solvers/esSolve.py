@@ -102,19 +102,19 @@ def setupBCRows(N,V0,VN,M,potBC,rowsNotBC):
 # assigns values to M in M x = potBC, for rows that do not correspond to BCs
 def setupNonBCRows(N,D,M,rowsNotBC):
   (N0,N1,N2) = (N[0],N[1],N[2])
-  (DX,DY,DZ) = (D[0],D[1],D[2])
+  (D0,D1,D2) = (D[0],D[1],D[2])
   dim = dimension(N)
 
   for row in rowsNotBC:
-    coeffX = pow(DY*DZ,2.0)
+    coeffX = pow(D1*D2,2.0)
 
     if dim == 2 or dim == 3:
-      coeffY = pow(DX*DZ,2.0)
+      coeffY = pow(D0*D2,2.0)
     else:
       coeffY = 0.0
 
     if dim == 3:
-      coeffZ = pow(DX*DY,2.0)
+      coeffZ = pow(D0*D1,2.0)
     else:
       coeffZ = 0.0
 
@@ -134,20 +134,19 @@ def setupNonBCRows(N,D,M,rowsNotBC):
     M[row][row] = coeffXYZ
 
 # can i assign a variable to these default params?
-def laplace1D(N0,DX,V0x,VNx,solType,relTol=0.1,absTol=0.1):
-  return laplace([N0,0,0],[DX,1.0,1.0],[V0x],[VNx],solType,relTol,absTol)
+def laplace1D(N0,D0,V0_0,V0_N0,solType,relTol=0.1,absTol=0.1):
+  return laplace([N0,0,0],[D0,1.0,1.0],[V0_0],[V0_N0],solType,relTol,absTol)
 
-def laplace2D(N0,DX,V0x,VNx,N1,DY,V0y,VNy,solType,relTol=0.1,absTol=0.1):
-  return laplace([N0,N1,0],[DX,DY,1.0],[V0x,V0y],[VNx,VNy],solType,relTol,absTol)
+def laplace2D(N0,D0,V0_0,V0_N0,N1,D1,V1_0,V1_N1,solType,relTol=0.1,absTol=0.1):
+  return laplace([N0,N1,0],[D0,D1,1.0],[V0_0,V1_0],[V0_N0,V1_N1],solType,relTol,absTol)
 
-def laplace3D(N0,DX,V0x,VNx,N1,DY,V0y,VNy,N2,DZ,V0z,VNz,solType,relTol=0.1,absTol=0.1):
-  return laplace([N0,N1,N2],[DX,DY,DZ],[V0x,V0y,V0z],[VNx,VNy,VNz],solType,relTol,absTol)
+def laplace3D(N0,D0,V0_0,V0_N0,N1,D1,V1_0,V1_N1,N2,D2,V2_0,V2_N2,solType,relTol=0.1,absTol=0.1):
+  return laplace([N0,N1,N2],[D0,D1,D2],[V0_0,V1_0,V2_0],[V0_N0,V1_N1,V2_N2],solType,relTol,absTol)
 
 # General Laplace Solver
-# make this method private if I make a class at some point
 def laplace(N,D,V0,VN,solType,relTol=0.1,absTol=0.1):
   (N0,N1,N2) = (N[0],N[1],N[2])
-  (DX,DY,DZ) = (D[0],D[1],D[2])
+  (D0,D1,D2) = (D[0],D[1],D[2])
   pts        = (N0+1)*(N1+1)*(N2+1)
   M          = np.zeros(shape=(pts,pts))
   potBC      = np.zeros(shape=(pts))
