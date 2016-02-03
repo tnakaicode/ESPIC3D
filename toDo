@@ -10,3 +10,5 @@
      http://wiki.scipy.org/PerformancePython
 
 4. should test absolute in addition to relative tolerance
+
+5. add cython example showing speed up
