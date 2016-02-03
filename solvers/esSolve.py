@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import linAlgSolveCy
 import linAlgSolve
 
 # Converts grid indices (i,j,k) to 1d array indices
@@ -57,21 +58,30 @@ def put1DArrayOnGrid(N,array):
   return arrayOnGrid
 
 # Solve linear system M x = B
-def solveLinearSystem(M,B,solType,relTol,absTol):
+def solveLinearSystem(M,B,solType,relTol,absTol,useCython=True):
   if solType == "direct":
-    x = linAlgSolve.direct(M,B)
+    if useCython:
+      x = linAlgSolveCy.direct(M,B)
+    else:
+      x = linAlgSolve.direct(M,B)
   elif solType == "jacobi":
-    x = linAlgSolve.jacobi(M,B,relTol,absTol)
+    if useCython:
+      x = linAlgSolveCy.jacobi(M,B,relTol,absTol)
+    else:
+      x = linAlgSolve.jacobi(M,B,relTol,absTol)
   elif solType == "gaussSeidel":
-    x = linAlgSolve.gaussSeidel(M,B,relTol,absTol)
+    if useCython:
+      x = linAlgSolveCy.gaussSeidel(M,B,relTol,absTol)
+    else:
+      x = linAlgSolve.gaussSeidel(M,B,relTol,absTol)
   else:
     sys.exit("esSolve::solveLinearSystem() -- invalid solution type")
 
   return x
 
 # Solve linear system M x = potBC but return x on the computational grid
-def solveForPotential(N,M,potBC,solType,relTol,absTol):
-  return put1DArrayOnGrid(N,solveLinearSystem(M,potBC,solType,relTol,absTol))
+def solveForPotential(N,M,potBC,solType,relTol,absTol,useCython=True):
+  return put1DArrayOnGrid(N,solveLinearSystem(M,potBC,solType,relTol,absTol,useCython))
 
 # assigns values to M and potBC in M x = potBC, using boundary conditions
 def setupBCRows(N,V0,VN,M,potBC,rowsNotBC):
@@ -134,17 +144,17 @@ def setupNonBCRows(N,D,M,rowsNotBC):
     M[row][row] = coeffXYZ
 
 # can i assign a variable to these default params?
-def laplace1D(N0,D0,V0_0,V0_N0,solType,relTol=0.1,absTol=0.1):
-  return laplace([N0,0,0],[D0,1.0,1.0],[V0_0],[V0_N0],solType,relTol,absTol)
+def laplace1D(N0,D0,V0_0,V0_N0,solType,relTol=0.1,absTol=0.1,useCython=True):
+  return laplace([N0,0,0],[D0,1.0,1.0],[V0_0],[V0_N0],solType,relTol,absTol,useCython)
 
-def laplace2D(N0,D0,V0_0,V0_N0,N1,D1,V1_0,V1_N1,solType,relTol=0.1,absTol=0.1):
-  return laplace([N0,N1,0],[D0,D1,1.0],[V0_0,V1_0],[V0_N0,V1_N1],solType,relTol,absTol)
+def laplace2D(N0,D0,V0_0,V0_N0,N1,D1,V1_0,V1_N1,solType,relTol=0.1,absTol=0.1,useCython=True):
+  return laplace([N0,N1,0],[D0,D1,1.0],[V0_0,V1_0],[V0_N0,V1_N1],solType,relTol,absTol,useCython)
 
-def laplace3D(N0,D0,V0_0,V0_N0,N1,D1,V1_0,V1_N1,N2,D2,V2_0,V2_N2,solType,relTol=0.1,absTol=0.1):
-  return laplace([N0,N1,N2],[D0,D1,D2],[V0_0,V1_0,V2_0],[V0_N0,V1_N1,V2_N2],solType,relTol,absTol)
+def laplace3D(N0,D0,V0_0,V0_N0,N1,D1,V1_0,V1_N1,N2,D2,V2_0,V2_N2,solType,relTol=0.1,absTol=0.1,useCython=True):
+  return laplace([N0,N1,N2],[D0,D1,D2],[V0_0,V1_0,V2_0],[V0_N0,V1_N1,V2_N2],solType,relTol,absTol,useCython)
 
 # General Laplace Solver
-def laplace(N,D,V0,VN,solType,relTol=0.1,absTol=0.1):
+def laplace(N,D,V0,VN,solType,relTol=0.1,absTol=0.1,useCython=True):
   (N0,N1,N2) = (N[0],N[1],N[2])
   (D0,D1,D2) = (D[0],D[1],D[2])
   pts        = (N0+1)*(N1+1)*(N2+1)
@@ -156,4 +166,4 @@ def laplace(N,D,V0,VN,solType,relTol=0.1,absTol=0.1):
   setupBCRows(N,V0,VN,M,potBC,rowsNotBC)
   setupNonBCRows(N,D,M,rowsNotBC)
 
-  return solveForPotential(N,M,potBC,solType,relTol,absTol)
+  return solveForPotential(N,M,potBC,solType,relTol,absTol,useCython)
