@@ -1,14 +1,10 @@
 0. add unit tests for individual methods in esSolve
 
-1. Implement own direct solver instead of linalg.solve?
-
-2. Solver:
+1. Solver:
      Neumann BCs: a given boundary wall should allow for dirichlet and neumann points
      Poisson
 
-3. Parallelize: CUDA, OpenMP / MPI
+2. Parallelize: CUDA, OpenMP / MPI
      http://wiki.scipy.org/PerformancePython
 
-4. should test absolute in addition to relative tolerance
-
-5. add cython example showing speed up
+3. should test absolute in addition to relative tolerance
