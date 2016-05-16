@@ -11,19 +11,41 @@ def gridIndexTo1DIndex(N,i,j,k):
   return (N[2]+1)*(N[1]+1)*i+(N[2]+1)*j+k
 
 # Updates D and potBC for rows that contain a boundary conditon
-def applyBCs(index1,index2,V1,V2,potBC,M,rowsNotBC):
-  indexes = [index1,index2]
+
+#look everywhere where V is used for a BC and change to something like "BC"
+
+def applyBCs(index1,index1right,index2,index2left,V1,V2,D,potBC,M,rowsNotBC):
+  indexes = [[index1,index1right],[index2,index2left]]
   V = [V1,V2]
   for i in range(2):
-    index = indexes[i]
-    myV = V[i]
+    index = indexes[i][0]
+    indexNearby = indexes[i][1]
+    bcType = V[i][0]
+    myV = V[i][1]
     # This will need to be updated when we add Neumann BCs
     if index not in rowsNotBC:
       if potBC[index] != myV:
         print("inconsistent BCs")
-    else: 
-      potBC[index] = myV
+    else:
       M[index][index] = 1.0
+
+      if bcType == "d":
+        potBC[index] = myV
+
+      elif bcType == "n":
+        M[index][indexNearby] = -1.0
+  
+        # corresponds to 0
+        if index == index1:
+          potBC[index] = myV*D
+
+        # corresponds to N
+        elif index == index2:
+          potBC[index] = -myV*D
+
+      else:
+        print("invalid bc type")
+
       rowsNotBC.remove(index)
 
 # Return dimension given number of grid indices in each dimension
@@ -84,30 +106,52 @@ def solveForPotential(N,M,potBC,solType,relTol,absTol,useCython=True):
   return put1DArrayOnGrid(N,solveLinearSystem(M,potBC,solType,relTol,absTol,useCython))
 
 # assigns values to M and potBC in M x = potBC, using boundary conditions
-def setupBCRows(N,V0,VN,M,potBC,rowsNotBC):
+def setupBCRows(N,D,V0,VN,M,potBC,rowsNotBC):
   (N0,N1,N2) = (N[0],N[1],N[2])
+  (D0,D1,D2) = (D[0],D[1],D[2])
   dim = dimension(N)
   for j in range(N1+1):
     for k in range(N2+1):
       if dim == 1:
-        applyBCs(gridIndexTo1DIndex(N,0,j,k),gridIndexTo1DIndex(N,N0,j,k),V0[0],VN[0],potBC,M,rowsNotBC)
+        applyBCs(gridIndexTo1DIndex(N,0,j,k),gridIndexTo1DIndex(N,1,j,k), \
+                 gridIndexTo1DIndex(N,N0,j,k),gridIndexTo1DIndex(N,N0-1,j,k), \
+                 [V0[0][0],V0[0][1]],[VN[0][0],VN[0][1]], \
+                 D0,potBC,M,rowsNotBC)
+
       elif dim == 2:
-        applyBCs(gridIndexTo1DIndex(N,0,j,k),gridIndexTo1DIndex(N,N0,j,k),V0[0][j],VN[0][j],potBC,M,rowsNotBC)
+        applyBCs(gridIndexTo1DIndex(N,0,j,k),gridIndexTo1DIndex(N,1,j,k), \
+                 gridIndexTo1DIndex(N,N0,j,k),gridIndexTo1DIndex(N,N0-1,j,k), \
+                 [V0[0][0],V0[0][1][j]],[VN[0][0],VN[0][1][j]], \
+                 D0,potBC,M,rowsNotBC)
+
       elif dim == 3:
-        applyBCs(gridIndexTo1DIndex(N,0,j,k),gridIndexTo1DIndex(N,N0,j,k),V0[0][j][k],VN[0][j][k],potBC,M,rowsNotBC)
+        applyBCs(gridIndexTo1DIndex(N,0,j,k),gridIndexTo1DIndex(N,1,j,k), \
+                 gridIndexTo1DIndex(N,N0,j,k),gridIndexTo1DIndex(N,N0-1,j,k), \
+                 [V0[0][0],V0[0][1][j][k]],[VN[0][0],VN[0][1][j][k]], \
+                 D0,potBC,M,rowsNotBC)
 
   if dim == 2 or dim == 3:
     for i in range(N0+1):
       for k in range(N2+1):
         if dim == 2:
-          applyBCs(gridIndexTo1DIndex(N,i,0,k),gridIndexTo1DIndex(N,i,N1,k),V0[1][i],VN[1][i],potBC,M,rowsNotBC)
+          applyBCs(gridIndexTo1DIndex(N,i,0,k),gridIndexTo1DIndex(N,i,1,k), \
+                   gridIndexTo1DIndex(N,i,N1,k),gridIndexTo1DIndex(N,i,N1-1,k), \
+                   [V0[0][0],V0[1][1][i]],[VN[0][0],VN[1][1][i]], \
+                   D1,potBC,M,rowsNotBC)
+
         elif dim == 3:
-          applyBCs(gridIndexTo1DIndex(N,i,0,k),gridIndexTo1DIndex(N,i,N1,k),V0[1][i][k],VN[1][i][k],potBC,M,rowsNotBC)
+          applyBCs(gridIndexTo1DIndex(N,i,0,k),gridIndexTo1DIndex(N,i,1,k), \
+                   gridIndexTo1DIndex(N,i,N1,k),gridIndexTo1DIndex(N,i,N1-1,k), \
+                   [V0[0][0],V0[1][1][i][k]],[VN[0][0],VN[1][1][i][k]], \
+                   D1,potBC,M,rowsNotBC)
 
   if dim == 3:
     for i in range(N0+1):
       for j in range(N1+1):
-        applyBCs(gridIndexTo1DIndex(N,i,j,0),gridIndexTo1DIndex(N,i,j,N2),V0[2][i][j],VN[2][i][j],potBC,M,rowsNotBC)
+        applyBCs(gridIndexTo1DIndex(N,i,j,0), gridIndexTo1DIndex(N,i,j,1), \
+                 gridIndexTo1DIndex(N,i,j,N2), gridIndexTo1DIndex(N,i,j,N2-1), \
+                 [V0[0][0],V0[2][1][i][j]],[VN[0][0],VN[2][1][i][j]], \
+                 D2,potBC,M,rowsNotBC)
 
 # assigns values to M in M x = potBC, for rows that do not correspond to BCs
 def setupNonBCRows(N,D,M,rowsNotBC):
@@ -160,10 +204,10 @@ def laplace(N,D,V0,VN,solType,relTol=0.1,absTol=0.1,useCython=True):
   pts        = (N0+1)*(N1+1)*(N2+1)
   M          = np.zeros(shape=(pts,pts))
   potBC      = np.zeros(shape=(pts))
-  rowsNotBC  = [i for i in range(pts)]
+  rowsNotBC  = range(pts)
   dim        = dimension(N)
 
-  setupBCRows(N,V0,VN,M,potBC,rowsNotBC)
+  setupBCRows(N,D,V0,VN,M,potBC,rowsNotBC)
   setupNonBCRows(N,D,M,rowsNotBC)
 
   return solveForPotential(N,M,potBC,solType,relTol,absTol,useCython)
