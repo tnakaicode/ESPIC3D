@@ -8,3 +8,7 @@
      http://wiki.scipy.org/PerformancePython
 
 3. should test absolute in addition to relative tolerance
+
+4. testLinAlg needs more test cases
+
+5. change system exits to raise exceptions instead

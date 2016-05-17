@@ -1,8 +1,7 @@
 import os
 import sys
-import numpy as np
-import math
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
+import numpy as np
 import linAlgSolveCy
 import linAlgSolve
 
@@ -32,13 +31,13 @@ def testSolvers():
     x_GaussSeidel_Cython = linAlgSolveCy.gaussSeidel(A,B,relTol,absTol)
     x_Direct             = linAlgSolve.direct(A,B)
     x_Direct_Cython      = linAlgSolveCy.direct(A,B)
- 
-    test(x_Jacobi,x)
-    test(x_Jacobi_Cython,x)
-    test(x_GaussSeidel,x)
-    test(x_GaussSeidel_Cython,x)
-    test(x_Direct,x)
-    test(x_Direct_Cython,x)
 
+    allTests = [ x_Jacobi,      x_Jacobi_Cython, \
+                 x_GaussSeidel, x_GaussSeidel_Cython, \
+                 x_Direct,      x_Direct_Cython ]
+
+    for aTest in allTests:
+       test(aTest,x)
+ 
   testCase(A1,x1,B1)
   testCase(A2,x2,B2)

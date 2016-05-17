@@ -8,11 +8,13 @@ import math
 absTol = 0.0
 relTol = 1.0e-3
 
+# 1D grid
 NX_1D = 10
 LX_1D = 1.2
 DX_1D = LX_1D / NX_1D
 X0_1D = 1.0
 
+# 2D grid
 NX_2D = 6
 NY_2D = 7
 LX_2D = 1.25
@@ -22,6 +24,7 @@ DY_2D = LY_2D / NY_2D
 X0_2D = 1.0
 Y0_2D = 2.0
 
+# 3D grid
 NX_3D = 5
 NY_3D = 6
 NZ_3D = 7
@@ -35,12 +38,14 @@ X0_3D = 1.0
 Y0_3D = 2.0
 Z0_3D = 3.0
 
+# 1D test cases
 def V1_1D(x):
   return 1.0*x + 2.0
 
 def E1_1D(x):
   return np.array([-1.0])
 
+# 2D test cases
 def V1_2D(x,y):
   return 0.5*(pow(x,2.0) - pow(y,2.0))
 
@@ -75,6 +80,7 @@ def E5_2D(x,y):
   return np.array([E1_2D(x,y)[0] + E2_2D(x,y)[0] + E3_2D(x,y)[0], \
                    E1_2D(x,y)[1] + E2_2D(x,y)[1] + E3_2D(x,y)[1]])
 
+# 3D test cases
 def V1_3D(x,y,z):
   return 0.5*V5_2D(x,y) + 2.0*z
 
@@ -110,7 +116,7 @@ def test_laplace():
     assert np.allclose(array1,array2,relTol,absTol)
 
   def test1D(potential,field):
-    potAccept1D = np.zeros(NX_1D+1)
+    potAccept1D   = np.zeros(NX_1D+1)
     fieldAccept1D = np.zeros((NX_1D+1,1))
     for i in range(NX_1D+1):
       potAccept1D[i]   = potential(X0_1D+DX_1D*i)
@@ -135,18 +141,18 @@ def test_laplace():
     potGaussSeidel1D_Cython = esSolve.laplace1D(NX_1D,DX_1D,V0_1D,VN_1D, \
                                                 "gaussSeidel",relTol,absTol,useCython=True)
 
-    test(potDirect1D,potAccept1D)
-    test(potDirect1D_Cython,potAccept1D)
-    test(potJacobi1D,potAccept1D)
-    test(potJacobi1D_Cython,potAccept1D)
-    test(potGaussSeidel1D,potAccept1D)
-    test(potGaussSeidel1D_Cython,potAccept1D)
+    allTests = [ potDirect1D,      potDirect1D_Cython, \
+                 potJacobi1D,      potJacobi1D_Cython, \
+                 potGaussSeidel1D, potGaussSeidel1D_Cython ]
+
+    for aTest in allTests:
+      test(aTest,potAccept1D)
 
   def test2D(potential,field):
-    potAccept2D = np.zeros((NX_2D+1,NY_2D+1))
+    potAccept2D   = np.zeros((NX_2D+1,NY_2D+1))
     fieldAccept2D = np.zeros((NX_2D+1,NY_2D+1,2))
     for i,j in np.ndindex(potAccept2D.shape):
-      potAccept2D[i,j] = potential(X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
+      potAccept2D[i,j]   = potential(X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
       fieldAccept2D[i,j] = field(X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
 
     # Boundary conditions
@@ -179,19 +185,19 @@ def test_laplace():
                                                 NY_2D,DY_2D,V0y_2D,VNy_2D, \
                                                 "gaussSeidel",relTol,absTol,useCython=True)
 
-    test(potDirect2D,potAccept2D)
-    test(potDirect2D_Cython,potAccept2D)
-    test(potJacobi2D,potAccept2D)
-    test(potJacobi2D_Cython,potAccept2D)
-    test(potGaussSeidel2D,potAccept2D)
-    test(potGaussSeidel2D_Cython,potAccept2D)
+    allTests = [ potDirect2D,      potDirect2D_Cython, \
+                 potJacobi2D,      potJacobi2D_Cython, \
+                 potGaussSeidel2D, potGaussSeidel2D_Cython ]
+
+    for aTest in allTests:
+      test(aTest,potAccept2D)
 
   def test3D(potential,field):
     potAccept3D   = np.zeros((NX_3D+1,NY_3D+1,NZ_3D+1))
     fieldAccept3D = np.zeros((NX_3D+1,NY_3D+1,NZ_3D+1,3))
     for i,j,k in np.ndindex(potAccept3D.shape):
       # consider using np.fromfunction here
-      potAccept3D[i,j,k] = potential(X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
+      potAccept3D[i,j,k]   = potential(X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
       fieldAccept3D[i,j,k] = field(X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
 
     # Boundary conditions
@@ -233,12 +239,12 @@ def test_laplace():
                                                 NZ_3D,DZ_3D,V0z_3D,VNz_3D, \
                                                 "gaussSeidel",relTol,absTol,useCython=True)
 
-    test(potDirect3D,potAccept3D)
-    test(potDirect3D_Cython,potAccept3D)
-    test(potJacobi3D,potAccept3D)
-    test(potJacobi3D_Cython,potAccept3D)
-    test(potGaussSeidel3D,potAccept3D)
-    test(potGaussSeidel3D_Cython,potAccept3D)
+    allTests = [ potDirect3D,      potDirect3D_Cython, \
+                 potJacobi3D,      potJacobi3D_Cython, \
+                 potGaussSeidel3D, potGaussSeidel3D_Cython ]
+
+    for aTest in allTests:
+      test(aTest,potAccept3D)
 
   # Run the tests
   test1D(V1_1D,E1_1D)
