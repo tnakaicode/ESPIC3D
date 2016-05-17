@@ -107,6 +107,7 @@ def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):
   (NX,NY,NZ) = (N[0],N[1],N[2])
   (DX,DY,DZ) = (D[0],D[1],D[2])
   dim = dimension(N)
+
   for j in range(NY+1):
     for k in range(NZ+1):
       if dim == 1:
@@ -185,14 +186,20 @@ def setupNonBCRows(N,D,M,rowsNotBC):
     M[row][row] = coeffXYZ
 
 # can i assign a variable to these default params?
-def laplace1D(NX,DX,BCX_0,BCX_NX,solType,relTol=0.1,absTol=0.1,useCython=True):
-  return laplace([NX,0,0],[DX,1.0,1.0],[BCX_0],[BCX_NX],solType,relTol,absTol,useCython)
+def laplace1D(NX,DX,BCX_0,BCX_NX, \
+              solType,relTol=0.1,absTol=0.1,useCython=True):
+  return laplace([NX,0,0],[DX,1.0,1.0],[BCX_0],[BCX_NX], \
+                 solType,relTol,absTol,useCython)
 
-def laplace2D(NX,DX,BCX_0,BCX_NX,NY,DY,BCY_0,BCY_NY,solType,relTol=0.1,absTol=0.1,useCython=True):
-  return laplace([NX,NY,0],[DX,DY,1.0],[BCX_0,BCY_0],[BCX_NX,BCY_NY],solType,relTol,absTol,useCython)
+def laplace2D(NX,DX,BCX_0,BCX_NX,NY,DY,BCY_0,BCY_NY, \
+              solType,relTol=0.1,absTol=0.1,useCython=True):
+  return laplace([NX,NY,0],[DX,DY,1.0],[BCX_0,BCY_0],[BCX_NX,BCY_NY], \
+                 solType,relTol,absTol,useCython)
 
-def laplace3D(NX,DX,BCX_0,BCX_NX,NY,DY,BCY_0,BCY_NY,NZ,DZ,BCZ_0,BCZ_NZ,solType,relTol=0.1,absTol=0.1,useCython=True):
-  return laplace([NX,NY,NZ],[DX,DY,DZ],[BCX_0,BCY_0,BCZ_0],[BCX_NX,BCY_NY,BCZ_NZ],solType,relTol,absTol,useCython)
+def laplace3D(NX,DX,BCX_0,BCX_NX,NY,DY,BCY_0,BCY_NY,NZ,DZ,BCZ_0,BCZ_NZ, \
+              solType,relTol=0.1,absTol=0.1,useCython=True):
+  return laplace([NX,NY,NZ],[DX,DY,DZ],[BCX_0,BCY_0,BCZ_0],[BCX_NX,BCY_NY,BCZ_NZ], \
+                 solType,relTol,absTol,useCython)
 
 # General Laplace Solver
 def laplace(N,D,BC0,BCN,solType,relTol=0.1,absTol=0.1,useCython=True):
