@@ -22,11 +22,11 @@ def nonGroundedWall(Yindex):
   return amplitude * np.sin(np.pi * Yindex / NY)
 
 # Boundary conditions
-V0x = np.zeros((NY+1))
-VNx = np.fromfunction(nonGroundedWall, (NY+1,))
+V0x = ["d",np.zeros((NY+1))]
+VNx = ["d",np.fromfunction(nonGroundedWall, (NY+1,))]
 
-V0y = np.zeros((NX+1))
-VNy = np.zeros((NX+1))
+V0y = ["d",np.zeros((NX+1))]
+VNy = ["d",np.zeros((NX+1))]
 
 start = time.clock()
 potential_NoCython = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0e-3,useCython=False)

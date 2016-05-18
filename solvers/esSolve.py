@@ -13,13 +13,14 @@ def gridIndexTo1DIndex(N,i,j,k):
 # Updates D and potBC for rows that contain a boundary conditon
 def applyBCs(index1,index1right,index2,index2left,BC1,BC2,D,potBC,M,rowsNotBC):
   indexes = [[index1,index1right],[index2,index2left]]
-  BC = [BC1,BC2]
+  BC      = [BC1,BC2]
+
   for i in range(2):
-    index = indexes[i][0]
+    index       = indexes[i][0]
     indexNearby = indexes[i][1]
-    bcType = BC[i][0]
-    myBC = BC[i][1]
-    # This will need to be updated when we add Neumann BCs
+    bcType      = BC[i][0]
+    myBC        = BC[i][1]
+
     if index not in rowsNotBC:
       if potBC[index] != myBC:
         print("inconsistent BCs")
@@ -125,19 +126,19 @@ def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):
       if dim == 1:
         applyBCs(gridIndexTo1DIndex(N,0,j,k), gridIndexTo1DIndex(N,1,j,k),    \
                  gridIndexTo1DIndex(N,NX,j,k),gridIndexTo1DIndex(N,NX-1,j,k), \
-                 [BCX_0[0],BCX_0[1]],[BCX_NX[0],BCX_NX[1]],                 \
+                 [BCX_0[0],BCX_0[1]],[BCX_NX[0],BCX_NX[1]],                   \
                  DX,potBC,M,rowsNotBC)
 
       elif dim == 2:
         applyBCs(gridIndexTo1DIndex(N,0,j,k), gridIndexTo1DIndex(N,1,j,k),    \
                  gridIndexTo1DIndex(N,NX,j,k),gridIndexTo1DIndex(N,NX-1,j,k), \
-                 [BCX_0[0],BCX_0[1][j]],[BCX_NX[0],BCX_NX[1][j]],           \
+                 [BCX_0[0],BCX_0[1][j]],[BCX_NX[0],BCX_NX[1][j]],             \
                  DX,potBC,M,rowsNotBC)
 
       elif dim == 3:
         applyBCs(gridIndexTo1DIndex(N,0,j,k), gridIndexTo1DIndex(N,1,j,k),    \
                  gridIndexTo1DIndex(N,NX,j,k),gridIndexTo1DIndex(N,NX-1,j,k), \
-                 [BCX_0[0],BCX_0[1][j][k]],[BCX_NX[0],BCX_NX[1][j][k]],     \
+                 [BCX_0[0],BCX_0[1][j][k]],[BCX_NX[0],BCX_NX[1][j][k]],       \
                  DX,potBC,M,rowsNotBC)
 
   if dim == 2 or dim == 3:
@@ -146,13 +147,13 @@ def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):
         if dim == 2:
           applyBCs(gridIndexTo1DIndex(N,i,0,k), gridIndexTo1DIndex(N,i,1,k),    \
                    gridIndexTo1DIndex(N,i,NY,k),gridIndexTo1DIndex(N,i,NY-1,k), \
-                   [BCY_0[0],BCY_0[1][i]],[BCY_NY[0],BCY_NY[1][i]],           \
+                   [BCY_0[0],BCY_0[1][i]],[BCY_NY[0],BCY_NY[1][i]],             \
                    DY,potBC,M,rowsNotBC)
 
         elif dim == 3:
           applyBCs(gridIndexTo1DIndex(N,i,0,k), gridIndexTo1DIndex(N,i,1,k),    \
                    gridIndexTo1DIndex(N,i,NY,k),gridIndexTo1DIndex(N,i,NY-1,k), \
-                   [BCY_0[0],BCY_0[1][i][k]],[BCY_NY[0],BCY_NY[1][i][k]],     \
+                   [BCY_0[0],BCY_0[1][i][k]],[BCY_NY[0],BCY_NY[1][i][k]],       \
                    DY,potBC,M,rowsNotBC)
 
   if dim == 3:
@@ -160,7 +161,7 @@ def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):
       for j in range(NY+1):
         applyBCs(gridIndexTo1DIndex(N,i,j,0), gridIndexTo1DIndex(N,i,j,1),    \
                  gridIndexTo1DIndex(N,i,j,NZ),gridIndexTo1DIndex(N,i,j,NZ-1), \
-                 [BCZ_0[0],BCZ_0[1][i][j]],[BCZ_NZ[0],BCZ_NZ[1][i][j]],     \
+                 [BCZ_0[0],BCZ_0[1][i][j]],[BCZ_NZ[0],BCZ_NZ[1][i][j]],       \
                  DZ,potBC,M,rowsNotBC)
 
 # assigns values to M in M x = potBC, for rows that do not correspond to BCs

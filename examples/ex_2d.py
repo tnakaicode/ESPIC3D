@@ -22,11 +22,11 @@ def nonGroundedWall(Yindex):
   return amplitude * np.sin(np.pi * Yindex / NY)
 
 # Boundary conditions
-V0x = np.zeros((NY+1))
-VNx = np.fromfunction(nonGroundedWall, (NY+1,))
+V0x = ["d",np.zeros((NY+1))]
+VNx = ["d",np.fromfunction(nonGroundedWall, (NY+1,))]
 
-V0y = np.zeros((NX+1))
-VNy = np.zeros((NX+1))
+V0y = ["d",np.zeros((NX+1))]
+VNy = ["d",np.zeros((NX+1))]
 
 start = time.clock()
 
