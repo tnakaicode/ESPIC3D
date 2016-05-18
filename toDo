@@ -14,3 +14,7 @@
 5. change system exits to raise exceptions instead
 
 6. esSolve.py --> poisson.py ?
+
+7. esSolve::applyBCs() --> make into a dictionary?
+
+8. switch BCs from E to dV/dx to make more generic?
