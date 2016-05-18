@@ -106,26 +106,38 @@ def solveForPotential(N,M,potBC,solType,relTol,absTol,useCython=True):
 def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):
   (NX,NY,NZ) = (N[0],N[1],N[2])
   (DX,DY,DZ) = (D[0],D[1],D[2])
+
   dim = dimension(N)
+
+  BCX_0  = BC0[0]
+  BCX_NX = BCN[0]
+
+  if dim > 1:
+    BCY_0  = BC0[1]
+    BCY_NY = BCN[1]
+
+  if dim > 2:
+    BCZ_0  = BC0[2]
+    BCZ_NZ = BCN[2]
 
   for j in range(NY+1):
     for k in range(NZ+1):
       if dim == 1:
         applyBCs(gridIndexTo1DIndex(N,0,j,k), gridIndexTo1DIndex(N,1,j,k),    \
                  gridIndexTo1DIndex(N,NX,j,k),gridIndexTo1DIndex(N,NX-1,j,k), \
-                 [BC0[0][0],BC0[0][1]],[BCN[0][0],BCN[0][1]],                 \
+                 [BCX_0[0],BCX_0[1]],[BCX_NX[0],BCX_NX[1]],                 \
                  DX,potBC,M,rowsNotBC)
 
       elif dim == 2:
         applyBCs(gridIndexTo1DIndex(N,0,j,k), gridIndexTo1DIndex(N,1,j,k),    \
                  gridIndexTo1DIndex(N,NX,j,k),gridIndexTo1DIndex(N,NX-1,j,k), \
-                 [BC0[0][0],BC0[0][1][j]],[BCN[0][0],BCN[0][1][j]],           \
+                 [BCX_0[0],BCX_0[1][j]],[BCX_NX[0],BCX_NX[1][j]],           \
                  DX,potBC,M,rowsNotBC)
 
       elif dim == 3:
         applyBCs(gridIndexTo1DIndex(N,0,j,k), gridIndexTo1DIndex(N,1,j,k),    \
                  gridIndexTo1DIndex(N,NX,j,k),gridIndexTo1DIndex(N,NX-1,j,k), \
-                 [BC0[0][0],BC0[0][1][j][k]],[BCN[0][0],BCN[0][1][j][k]],     \
+                 [BCX_0[0],BCX_0[1][j][k]],[BCX_NX[0],BCX_NX[1][j][k]],     \
                  DX,potBC,M,rowsNotBC)
 
   if dim == 2 or dim == 3:
@@ -134,13 +146,13 @@ def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):
         if dim == 2:
           applyBCs(gridIndexTo1DIndex(N,i,0,k), gridIndexTo1DIndex(N,i,1,k),    \
                    gridIndexTo1DIndex(N,i,NY,k),gridIndexTo1DIndex(N,i,NY-1,k), \
-                   [BC0[0][0],BC0[1][1][i]],[BCN[0][0],BCN[1][1][i]],           \
+                   [BCY_0[0],BCY_0[1][i]],[BCY_NY[0],BCY_NY[1][i]],           \
                    DY,potBC,M,rowsNotBC)
 
         elif dim == 3:
           applyBCs(gridIndexTo1DIndex(N,i,0,k), gridIndexTo1DIndex(N,i,1,k),    \
                    gridIndexTo1DIndex(N,i,NY,k),gridIndexTo1DIndex(N,i,NY-1,k), \
-                   [BC0[0][0],BC0[1][1][i][k]],[BCN[0][0],BCN[1][1][i][k]],     \
+                   [BCY_0[0],BCY_0[1][i][k]],[BCY_NY[0],BCY_NY[1][i][k]],     \
                    DY,potBC,M,rowsNotBC)
 
   if dim == 3:
@@ -148,7 +160,7 @@ def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):
       for j in range(NY+1):
         applyBCs(gridIndexTo1DIndex(N,i,j,0), gridIndexTo1DIndex(N,i,j,1),    \
                  gridIndexTo1DIndex(N,i,j,NZ),gridIndexTo1DIndex(N,i,j,NZ-1), \
-                 [BC0[0][0],BC0[2][1][i][j]],[BCN[0][0],BCN[2][1][i][j]],     \
+                 [BCZ_0[0],BCZ_0[1][i][j]],[BCZ_NZ[0],BCZ_NZ[1][i][j]],     \
                  DZ,potBC,M,rowsNotBC)
 
 # assigns values to M in M x = potBC, for rows that do not correspond to BCs
