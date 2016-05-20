@@ -1,8 +1,6 @@
 0. add unit tests for individual methods in esSolve
 
-1. Solver:
-     Neumann BCs: a given boundary wall should allow for dirichlet and neumann points
-     Poisson
+1. Poisson
 
 2. Parallelize: CUDA, OpenMP / MPI
      http://wiki.scipy.org/PerformancePython
@@ -18,3 +16,9 @@
 7. esSolve::applyBCs() --> make into a dictionary?
 
 8. switch BCs from E to dV/dx to make more generic?
+
+9. get 2D test case 4 passing
+
+10. figure out how to deal with all neumann bcs, or throw error if a user attempts it
+
+11. get 3d neumann working
