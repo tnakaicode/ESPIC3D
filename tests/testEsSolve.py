@@ -28,9 +28,9 @@ Y0_2D = 2.0
 NX_3D = 5
 NY_3D = 6
 NZ_3D = 7
-LX_3D = 1.25
-LY_3D = 2.3
-LZ_3D = 1.87
+LX_3D = 0.01*1.25
+LY_3D = 0.01*2.3
+LZ_3D = 0.01*1.87
 DX_3D = LX_3D / NX_3D
 DY_3D = LY_3D / NY_3D
 DZ_3D = LZ_3D / NZ_3D
@@ -129,11 +129,6 @@ def test_laplace():
     E0_1D = ["n",fieldAccept1D[0    ]]
     EN_1D = ["n",fieldAccept1D[NX_1D]]
 
-    BC0_1D = [V0_1D,E0_1D]
-    BCN_1D = [VN_1D,EN_1D]
-    testTypes = ["direct","jacobi","gaussSeidel"]
-    cythonTypes = [ True, False ]
-
     for BC0_1D in [V0_1D,E0_1D]:
       for BCN_1D in [VN_1D]:#,EN_1D]:
         for testType in ["direct","jacobi","gaussSeidel"]:
@@ -205,37 +200,26 @@ def test_laplace():
     E0z_3D = ["d",fieldAccept3D[:,    :,    0,    2]]
     ENz_3D = ["d",fieldAccept3D[:,    :,    NZ_3D,2]]
 
-    potDirect3D             = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D, \
-                                                NY_3D,DY_3D,V0y_3D,VNy_3D, \
-                                                NZ_3D,DZ_3D,V0z_3D,VNz_3D, \
-                                                "direct",useCython=False)
-    potDirect3D_Cython      = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D, \
-                                                NY_3D,DY_3D,V0y_3D,VNy_3D, \
-                                                NZ_3D,DZ_3D,V0z_3D,VNz_3D, \
-                                                "direct",useCython=True)
-    potJacobi3D             = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D, \
-                                                NY_3D,DY_3D,V0y_3D,VNy_3D, \
-                                                NZ_3D,DZ_3D,V0z_3D,VNz_3D, \
-                                                "jacobi",relTol,absTol,useCython=False)
-    potJacobi3D_Cython      = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D, \
-                                                NY_3D,DY_3D,V0y_3D,VNy_3D, \
-                                                NZ_3D,DZ_3D,V0z_3D,VNz_3D, \
-                                                "jacobi",relTol,absTol,useCython=True)
-    potGaussSeidel3D        = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D, \
-                                                NY_3D,DY_3D,V0y_3D,VNy_3D, \
-                                                NZ_3D,DZ_3D,V0z_3D,VNz_3D, \
-                                                "gaussSeidel",relTol,absTol,useCython=False)
-    potGaussSeidel3D_Cython = esSolve.laplace3D(NX_3D,DX_3D,V0x_3D,VNx_3D, \
-                                                NY_3D,DY_3D,V0y_3D,VNy_3D, \
-                                                NZ_3D,DZ_3D,V0z_3D,VNz_3D, \
-                                                "gaussSeidel",relTol,absTol,useCython=True)
+    for BC0x_3D in [V0x_3D]:#,E0x_3D]:
+      for BCNx_3D in [VNx_3D]:#,ENx_3D]:
+        for BC0y_3D in [V0y_3D]:#,E0y_3D]:
+          for BCNy_3D in [VNy_3D]:#,ENy_3D]:
+            for BC0z_3D in [V0z_3D]:#,E0z_3D]:
+              for BCNz_3D in [VNz_3D]:#,ENz_3D]:
+                for testType in ["direct","jacobi","gaussSeidel"]:
+                  for cythonType in [True,False]:
+                    if testType == "direct":
+                      potCalculated3D = esSolve.laplace3D(NX_3D,DX_3D,BC0x_3D,BCNx_3D, \
+                                                          NY_3D,DY_3D,BC0y_3D,BCNy_3D, \
+                                                          NZ_3D,DZ_3D,BC0z_3D,BCNz_3D, \
+                                                          testType,cythonType)
+                    else:
+                      potCalculated3D = esSolve.laplace3D(NX_3D,DX_3D,BC0x_3D,BCNx_3D, \
+                                                          NY_3D,DY_3D,BC0y_3D,BCNy_3D, \
+                                                          NZ_3D,DZ_3D,BC0z_3D,BCNz_3D, \
+                                                          testType,relTol,absTol,cythonType)
 
-    allTests = [ potDirect3D,      potDirect3D_Cython, \
-                 potJacobi3D,      potJacobi3D_Cython, \
-                 potGaussSeidel3D, potGaussSeidel3D_Cython ]
-
-    for aTest in allTests:
-      test(aTest,potAccept3D)
+                    test(potCalculated3D,potAccept3D)
 
   # Run the tests
   test1D(V1_1D,E1_1D)
