@@ -2,6 +2,8 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 import esSolve
+from neumann import neumann as neuBC
+from dirichlet import dirichlet as dirBC
 import numpy as np
 import math
 
@@ -123,11 +125,17 @@ def test_laplace():
       fieldAccept1D[i] = field(    X0_1D+DX_1D*i)
 
     # Boundary conditions
-    V0_1D = ["d",potAccept1D[0    ]]
-    VN_1D = ["d",potAccept1D[NX_1D]]
+#    V0_1D = ["d",potAccept1D[0    ]]
+#    VN_1D = ["d",potAccept1D[NX_1D]]
 
-    E0_1D = ["n",fieldAccept1D[0    ]]
-    EN_1D = ["n",fieldAccept1D[NX_1D]]
+#    E0_1D = ["n",fieldAccept1D[0    ]]
+#    EN_1D = ["n",fieldAccept1D[NX_1D]]
+
+    V0_1D = dirBC(potAccept1D[0    ])
+    VN_1D = dirBC(potAccept1D[NX_1D])
+
+    E0_1D = neuBC(fieldAccept1D[0    ])
+    EN_1D = neuBC(fieldAccept1D[NX_1D])
 
     for BC0_1D in [V0_1D,E0_1D]:
       for BCN_1D in [VN_1D]:#,EN_1D]:
@@ -150,15 +158,25 @@ def test_laplace():
       fieldAccept2D[i,j] = field(    X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
 
     # Boundary conditions
-    V0x_2D = ["d",potAccept2D[0,    :    ]]
-    VNx_2D = ["d",potAccept2D[NX_2D,:    ]]
-    V0y_2D = ["d",potAccept2D[:,    0    ]]
-    VNy_2D = ["d",potAccept2D[:,    NY_2D]]
+#    V0x_2D = ["d",potAccept2D[0,    :    ]]
+#    VNx_2D = ["d",potAccept2D[NX_2D,:    ]]
+#    V0y_2D = ["d",potAccept2D[:,    0    ]]
+#    VNy_2D = ["d",potAccept2D[:,    NY_2D]]
 
-    E0x_2D = ["n",fieldAccept2D[0,    :,    0]]
-    ENx_2D = ["n",fieldAccept2D[NX_2D,:,    0]]
-    E0y_2D = ["n",fieldAccept2D[:,    0,    1]]
-    ENy_2D = ["n",fieldAccept2D[:,    NY_2D,1]]
+#    E0x_2D = ["n",fieldAccept2D[0,    :,    0]]
+#    ENx_2D = ["n",fieldAccept2D[NX_2D,:,    0]]
+#    E0y_2D = ["n",fieldAccept2D[:,    0,    1]]
+#    ENy_2D = ["n",fieldAccept2D[:,    NY_2D,1]]
+
+    V0x_2D = dirBC(potAccept2D[0,    :    ])
+    VNx_2D = dirBC(potAccept2D[NX_2D,:    ])
+    V0y_2D = dirBC(potAccept2D[:,    0    ])
+    VNy_2D = dirBC(potAccept2D[:,    NY_2D])
+
+    E0x_2D = neuBC(fieldAccept2D[0,    :,    0])
+    ENx_2D = neuBC(fieldAccept2D[NX_2D,:,    0])
+    E0y_2D = neuBC(fieldAccept2D[:,    0,    1])
+    ENy_2D = neuBC(fieldAccept2D[:,    NY_2D,1])
 
     for BC0x_2D in [V0x_2D,E0x_2D]:
       for BCNx_2D in [VNx_2D,ENx_2D]:
@@ -186,19 +204,33 @@ def test_laplace():
       fieldAccept3D[i,j,k] = field(    X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
 
     # Boundary conditions
-    V0x_3D = ["d",potAccept3D[0,    :,    :    ]]
-    VNx_3D = ["d",potAccept3D[NX_3D,:,    :    ]]
-    V0y_3D = ["d",potAccept3D[:,    0,    :    ]]
-    VNy_3D = ["d",potAccept3D[:,    NY_3D,:    ]]
-    V0z_3D = ["d",potAccept3D[:,    :,    0    ]]
-    VNz_3D = ["d",potAccept3D[:,    :,    NZ_3D]]
+#    V0x_3D = ["d",potAccept3D[0,    :,    :    ]]
+#    VNx_3D = ["d",potAccept3D[NX_3D,:,    :    ]]
+#    V0y_3D = ["d",potAccept3D[:,    0,    :    ]]
+#    VNy_3D = ["d",potAccept3D[:,    NY_3D,:    ]]
+#    V0z_3D = ["d",potAccept3D[:,    :,    0    ]]
+#    VNz_3D = ["d",potAccept3D[:,    :,    NZ_3D]]
 
-    E0x_3D = ["d",fieldAccept3D[0,    :,    :,    0]]
-    ENx_3D = ["d",fieldAccept3D[NX_3D,:,    :,    0]]
-    E0y_3D = ["d",fieldAccept3D[:,    0,    :,    1]]
-    ENy_3D = ["d",fieldAccept3D[:,    NY_3D,:,    1]]
-    E0z_3D = ["d",fieldAccept3D[:,    :,    0,    2]]
-    ENz_3D = ["d",fieldAccept3D[:,    :,    NZ_3D,2]]
+#    E0x_3D = ["d",fieldAccept3D[0,    :,    :,    0]]
+#    ENx_3D = ["d",fieldAccept3D[NX_3D,:,    :,    0]]
+#    E0y_3D = ["d",fieldAccept3D[:,    0,    :,    1]]
+#    ENy_3D = ["d",fieldAccept3D[:,    NY_3D,:,    1]]
+#    E0z_3D = ["d",fieldAccept3D[:,    :,    0,    2]]
+#    ENz_3D = ["d",fieldAccept3D[:,    :,    NZ_3D,2]]
+
+    V0x_3D = dirBC(potAccept3D[0,    :,    :    ])
+    VNx_3D = dirBC(potAccept3D[NX_3D,:,    :    ])
+    V0y_3D = dirBC(potAccept3D[:,    0,    :    ])
+    VNy_3D = dirBC(potAccept3D[:,    NY_3D,:    ])
+    V0z_3D = dirBC(potAccept3D[:,    :,    0    ])
+    VNz_3D = dirBC(potAccept3D[:,    :,    NZ_3D])
+
+    E0x_3D = neuBC(fieldAccept3D[0,    :,    :,    0])
+    ENx_3D = neuBC(fieldAccept3D[NX_3D,:,    :,    0])
+    E0y_3D = neuBC(fieldAccept3D[:,    0,    :,    1])
+    ENy_3D = neuBC(fieldAccept3D[:,    NY_3D,:,    1])
+    E0z_3D = neuBC(fieldAccept3D[:,    :,    0,    2])
+    ENz_3D = neuBC(fieldAccept3D[:,    :,    NZ_3D,2])
 
     for BC0x_3D in [V0x_3D]:#,E0x_3D]:
       for BCNx_3D in [VNx_3D]:#,ENx_3D]:

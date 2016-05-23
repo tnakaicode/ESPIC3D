@@ -22,5 +22,3 @@
 10. figure out how to deal with all neumann bcs (user specifies V at point?), or throw error if a user attempts it
 
 11. get 3d neumann working
-
-12. make a class for BCs
