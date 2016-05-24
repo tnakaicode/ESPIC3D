@@ -13,7 +13,7 @@
 
 6. esSolve.py --> poisson.py ?
 
-7. esSolve::applyBCs() --> make into a dictionary?
+7. make example that plots potential at each iteration (or every N iterations) to show convergence to solution
 
 8. switch BCs from E to dV/dx to make more generic?
 
@@ -22,3 +22,7 @@
 10. figure out how to deal with all neumann bcs (user specifies V at point?), or throw error if a user attempts it
 
 11. get 3d neumann working
+
+12. make class for field? should be generic (not potential-specific), plot() method
+
+13. make class for particles: pos, vel/momentum, charge, push() method
