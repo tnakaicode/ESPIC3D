@@ -6,6 +6,7 @@ import numpy as np
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 import esSolve
 from mpl_toolkits.mplot3d import axes3d
+from dirichlet import dirichlet as dirBC
 
 NX = 25
 NY = 30
@@ -22,11 +23,11 @@ def nonGroundedWall(Yindex):
   return amplitude * np.sin(np.pi * Yindex / NY)
 
 # Boundary conditions
-V0x = ["d",np.zeros((NY+1))]
-VNx = ["d",np.fromfunction(nonGroundedWall, (NY+1,))]
+V0x = dirBC(np.zeros((NY+1)))
+VNx = dirBC(np.fromfunction(nonGroundedWall, (NY+1,)))
 
-V0y = ["d",np.zeros((NX+1))]
-VNy = ["d",np.zeros((NX+1))]
+V0y = dirBC(np.zeros((NX+1)))
+VNy = dirBC(np.zeros((NX+1)))
 
 start = time.clock()
 

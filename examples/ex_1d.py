@@ -3,14 +3,15 @@ import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 import matplotlib.pyplot as plt
 import esSolve
+from dirichlet import dirichlet as dirBC
 
 NX   = 10
 LX   = 1.2
 
 DX   = LX / NX
 
-V0   = ["d",1.0]
-VN   = ["d",2.0]
+V0   = dirBC(1.0)
+VN   = dirBC(2.0)
 
 X0 = 1.5
 
