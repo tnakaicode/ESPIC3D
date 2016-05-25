@@ -45,26 +45,26 @@ def V1_1D(x):
   return 1.0*x + 2.0
 
 def E1_1D(x):
-  return np.array([-1.0])
+  return -np.array([1.0])
 
 # 2D test cases
 def V1_2D(x,y):
   return 0.5*(pow(x,2.0) - pow(y,2.0))
 
 def E1_2D(x,y):
-  return np.array([-x,y])
+  return -np.array([x,-y])
 
 def V2_2D(x,y):
   return 2.0*x + 0.5*y
 
 def E2_2D(x,y):
-  return np.array([-2.0,-0.5])
+  return -np.array([2.0,0.5])
 
 def V3_2D(x,y):
   return 2.0
 
 def E3_2D(x,y):
-  return np.array([0.0,0.0])
+  return -np.array([0.0,0.0])
 
 def V4_2D(x,y):
   a = 0.1*2.0*math.pi/LX_2D
@@ -72,8 +72,8 @@ def V4_2D(x,y):
 
 def E4_2D(x,y):
   a = 0.1*2.0*math.pi/LX_2D
-  return np.array([-a*(math.cos(a*x) - math.sin(a*x))*(math.cosh(a*y) + math.sinh(a*y)), \
-                   -a*(math.cos(a*x) + math.sin(a*x))*(math.cosh(a*y) + math.sinh(a*y))])
+  return -a*np.array([(math.cos(a*x) - math.sin(a*x))*(math.cosh(a*y) + math.sinh(a*y)), \
+                      (math.cos(a*x) + math.sin(a*x))*(math.cosh(a*y) + math.sinh(a*y))])
 
 def V5_2D(x,y):
   return V1_2D(x,y) + V2_2D(x,y) + V3_2D(x,y)
@@ -109,9 +109,9 @@ def V4_3D(x,y,z):
 def E4_3D(x,y,z):
   a = 0.1*2.0*math.pi/max(LX_3D,LY_3D)
 # should these be using np versions?
-  return np.array([-a*math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z), \
-                   -a*math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z), \
-                   -math.sqrt(2.0)*a*math.exp(a*x)*math.exp(a*y)*math.cos(math.sqrt(2.0)*a*z)])
+  return -np.array([a*math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z), \
+                    a*math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z), \
+                    math.sqrt(2.0)*a*math.exp(a*x)*math.exp(a*y)*math.cos(math.sqrt(2.0)*a*z)])
 
 def test_laplace():
   def test(array1,array2):

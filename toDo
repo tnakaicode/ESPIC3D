@@ -17,12 +17,10 @@
 
 8. switch BCs from E to dV/dx to make more generic?
 
-9. get 2D test case 4 passing
+9. get final 2D and 3D test cases working
 
 10. figure out how to deal with all neumann bcs (user specifies V at point?), or throw error if a user attempts it
 
-11. get 3d neumann working
+11. make class for field? should be generic (not potential-specific), plot() method
 
-12. make class for field? should be generic (not potential-specific), plot() method
-
-13. make class for particles: pos, vel/momentum, charge, push() method
+12. make class for particles: pos, vel/momentum, charge, push() method
