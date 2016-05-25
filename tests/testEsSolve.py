@@ -111,7 +111,7 @@ def E4_3D(x,y,z):
 # should these be using np versions?
   return np.array([-a*math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z), \
                    -a*math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z), \
-                   math.sqrt(2.0)*a*math.exp(a*x)*math.exp(a*y)*math.cos(math.sqrt(2.0)*a*z)])
+                   -math.sqrt(2.0)*a*math.exp(a*x)*math.exp(a*y)*math.cos(math.sqrt(2.0)*a*z)])
 
 def test_laplace():
   def test(array1,array2):
@@ -202,11 +202,11 @@ def test_laplace():
     E0z_3D = neuBC(fieldAccept3D[:,    :,    0,    2])
     ENz_3D = neuBC(fieldAccept3D[:,    :,    NZ_3D,2])
 
-    for BC0x_3D in [V0x_3D]:#,E0x_3D]:
-      for BCNx_3D in [VNx_3D]:#,ENx_3D]:
-        for BC0y_3D in [V0y_3D]:#,E0y_3D]:
-          for BCNy_3D in [VNy_3D]:#,ENy_3D]:
-            for BC0z_3D in [V0z_3D]:#,E0z_3D]:
+    for BC0x_3D in [V0x_3D,E0x_3D]:
+      for BCNx_3D in [VNx_3D,ENx_3D]:
+        for BC0y_3D in [V0y_3D,E0y_3D]:
+          for BCNy_3D in [VNy_3D,ENy_3D]:
+            for BC0z_3D in [V0z_3D,E0z_3D]:
               for BCNz_3D in [VNz_3D]:#,ENz_3D]:
                 for testType in ["direct","jacobi","gaussSeidel"]:
                   for cythonType in [True,False]:
@@ -229,5 +229,5 @@ def test_laplace():
   for testFuncs in [[V1_2D,E1_2D], [V2_2D,E2_2D], [V3_2D,E3_2D], [V5_2D,E5_2D]]:#, [V4_2D,E4_2D]]:
     test2D(testFuncs[0],testFuncs[1])
 
-  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D], [V4_3D,E4_3D]]:
+  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D]]:#, [V4_3D,E4_3D]]:
     test3D(testFuncs[0],testFuncs[1])
