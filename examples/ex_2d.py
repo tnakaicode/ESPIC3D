@@ -31,21 +31,25 @@ VNy = dirBC(np.zeros((NX+1)))
 
 start = time.clock()
 
-potential = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0e-3)
+potential_0 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0)
+potential_3 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0e-3)
 
 end = time.clock()
 
 print("That took",round(end-start,1),"seconds.")
 
-def plot2Darray(array2D):
+def plot2Darrays(arrays):
   fig = plt.figure()
   ax = fig.add_subplot(111, projection='3d')
 
-  X = np.linspace(X0, X0 + LX, num=array2D.shape[0])
-  Y = np.linspace(Y0, Y0 + LY, num=array2D.shape[1])
+  X = np.linspace(X0, X0 + LX, num=arrays[0][0].shape[0])
+  Y = np.linspace(Y0, Y0 + LY, num=arrays[0][0].shape[1])
   X, Y = np.meshgrid(X, Y, indexing='ij')
 
-  ax.plot_wireframe(X, Y, array2D[:])
+  for array in arrays:
+    ax.plot_wireframe(X, Y, array[0][:],label='absolute tolerance = ' + array[1],color=array[2])
+
+  plt.legend(loc='best')
   plt.show()
 
-plot2Darray(potential)
+plot2Darrays([[potential_0,'1.0e-0','green'],[potential_3,'1.0e-3','blue']])
