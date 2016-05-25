@@ -19,7 +19,7 @@ To run the 2d example, run the command
 
     $ python3 examples/ex_2d.py
 
-The resulting plot should look like this, which shows two absolute error tolerances, 1.0 and 0.001:
+The resulting plot should look like this, which shows 3 absolute error tolerances: 1.0, 0.5, and 0.001:
 
 .. image:: images/ex_2d.png
     :align: center

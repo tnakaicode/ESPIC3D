@@ -31,7 +31,8 @@ VNy = dirBC(np.zeros((NX+1)))
 
 start = time.clock()
 
-potential_0 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0)
+potential_1 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0)
+potential_2 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=0.5)
 potential_3 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0e-3)
 
 end = time.clock()
@@ -52,4 +53,6 @@ def plot2Darrays(arrays):
   plt.legend(loc='best')
   plt.show()
 
-plot2Darrays([[potential_0,'1.0e-0','green'],[potential_3,'1.0e-3','blue']])
+plot2Darrays([[potential_1,'1.0','green'],
+              [potential_2,'0.5','red'],
+              [potential_3,'1.0e-3','blue']])
