@@ -43,12 +43,20 @@ def plot2Darrays(arrays):
   fig = plt.figure()
   ax = fig.add_subplot(111, projection='3d')
 
-  X = np.linspace(X0, X0 + LX, num=arrays[0][0].shape[0])
-  Y = np.linspace(Y0, Y0 + LY, num=arrays[0][0].shape[1])
-  X, Y = np.meshgrid(X, Y, indexing='ij')
+  if len(arrays) == 1:
+    X = np.linspace(X0, X0 + LX, num=arrays[0].shape[0])
+    Y = np.linspace(Y0, Y0 + LY, num=arrays[0].shape[1])
+    X, Y = np.meshgrid(X, Y, indexing='ij')
+  else:
+    X = np.linspace(X0, X0 + LX, num=arrays[0][0].shape[0])
+    Y = np.linspace(Y0, Y0 + LY, num=arrays[0][0].shape[1])
+    X, Y = np.meshgrid(X, Y, indexing='ij')
 
-  for array in arrays:
-    ax.plot_wireframe(X, Y, array[0][:],label='absolute tolerance = ' + array[1],color=array[2])
+  if len(arrays) == 1:
+      ax.plot_wireframe(X, Y, arrays[0])
+  else:
+    for array in arrays:
+      ax.plot_wireframe(X, Y, array[0][:],label='absolute tolerance = ' + array[1],color=array[2])
 
   plt.legend(loc='best')
   plt.show()
@@ -56,3 +64,5 @@ def plot2Darrays(arrays):
 plot2Darrays([[potential_1,'1.0','green'],
               [potential_2,'0.5','red'],
               [potential_3,'1.0e-3','blue']])
+
+plot2Darrays([potential_3])

@@ -20,5 +20,3 @@
 9. figure out how to deal with all neumann bcs (user specifies V at point?), or throw error if a user attempts it
 
 10. make class for field? should be generic (not potential-specific), plot() method
-
-11. make class for particles: pos, vel/momentum, charge, push() method
