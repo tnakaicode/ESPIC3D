@@ -21,12 +21,12 @@ To run the 2d example, run the command
 
 The first plot should look like this, which shows 3 absolute error tolerances: 1.0, 0.5, and 0.001:
 
-.. image:: images/ex_2d_one.png
+.. image:: images/ex_2d_many.png
     :align: center
 
 The second plot should look like this, which shows just the 0.001 absolute error tolerance.
 
-.. image:: images/ex_2d_many.png
+.. image:: images/ex_2d_one.png
     :align: center
 
 Tests
