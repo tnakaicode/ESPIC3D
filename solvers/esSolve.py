@@ -96,6 +96,76 @@ def solveLinearSystem(M,B,solType,relTol,absTol,useCython=True):
 def solveForPotential(N,M,potBC,solType,relTol,absTol,useCython=True):
   return put1DArrayOnGrid(N,solveLinearSystem(M,potBC,solType,relTol,absTol,useCython))
 
+#
+# definitely add a unit test for this method
+#
+# just use same accept V and E, and pass in V, check against E
+#
+def potentialToElectricField(potential,D):
+  (DX,DY,DZ) = (D[0],D[1],D[2])
+  dim = len(potential.shape)
+
+  if dim == 1:
+    electricField = np.zeros(potential.shape[0],1)
+  elif dim == 2:
+    electricField = np.zeros(potential.shape[0],potential.shape[1],2)
+  else:
+    electricField = np.zeros(potential.shape[0],potential.shape[1],potential.shape[2],3)
+
+  #
+  # almost certianly a better way to do this, but worry about that later
+  #
+  if dim == 1:
+    for i_x in range(potential.shape[0]):
+      if i_x == 0:
+        electricField[i_x] = -(potential[i_x+1] - potential[i_x])/DX
+      elif i_x == potential.shape[0] - 1:
+        electricField[i_x] = -(potential[i_x]   - potential[i_x-1])/DX
+      else:
+        electricField[i_x] = -(potential[i_x+1] - potential[i_x-1])/(2.0*DX)
+
+  if dim == 2:
+    for i_x in range(potential.shape[0]):
+      for i_y in range(potential.shape[1]):
+        if i_x == 0:
+          electricField[i_x][i_y][0] = -(potential[i_x+1][i_y] - potential[i_x][i_y])/DX
+        elif i_x == potential.shape[0] - 1:
+          electricField[i_x][i_y][0] = -(potential[i_x][i_y]   - potential[i_x-1][i_y])/DX
+        else:
+          electricField[i_x][i_y][0] = -(potential[i_x+1][i_y] - potential[i_x-1][i_y])/(2.0*DX)
+
+        if i_y == 0:
+          electricField[i_x][i_y][1] = -(potential[i_x][i_y+1] - potential[i_x][i_y])/DY
+        elif i_y == potential.shape[1] - 1:
+          electricField[i_x][i_y][1] = -(potential[i_x][i_y]   - potential[i_x][i_y-1])/DY
+        else:
+          electricField[i_x][i_y][1] = -(potential[i_x][i_y+1] - potential[i_x][i_y-1])/(2.0*DY)
+  
+  if dim == 3:
+    for i_x in range(potential.shape[0]):
+      for i_y in range(potential.shape[1]):
+        for i_z in range(potential.shape[2]):
+          if i_x == 0:
+            electricField[i_x][i_y][i_z][0] = -(potential[i_x+1][i_y][i_z] - potential[i_x][i_y][i_z])/DX
+          elif i_x == potential.shape[0] - 1:
+            electricField[i_x][i_y][i_z][0] = -(potential[i_x][i_y][i_z]   - potential[i_x-1][i_y][i_z])/DX
+          else:
+            electricField[i_x][i_y][i_z][0] = -(potential[i_x+1][i_y][i_z] - potential[i_x-1][i_y][i_z])/(2.0*DX)
+
+          if i_y == 0:
+            electricField[i_x][i_y][i_z][1] = -(potential[i_x][i_y+1][i_z] - potential[i_x][i_y][i_z])/DY
+          elif i_y == potential.shape[1] - 1:
+            electricField[i_x][i_y][i_z][1] = -(potential[i_x][i_y][i_z]   - potential[i_x][i_y-1][i_z])/DY
+          else:
+            electricField[i_x][i_y][i_z][1] = -(potential[i_x][i_y+1][i_z] - potential[i_x][i_y-1][i_z])/(2.0*DY)
+
+          if i_z == 0:
+            electricField[i_x][i_y][i_z][2] = -(potential[i_x][i_y][i_z+1] - potential[i_x][i_y][i_z])/DZ
+          elif i_z == potential.shape[2] - 1:
+            electricField[i_x][i_y][i_z][2] = -(potential[i_x][i_y][i_z]   - potential[i_x][i_y][i_z-1])/DZ
+          else:
+            electricField[i_x][i_y][i_z][2] = -(potential[i_x][i_y][i_z+1] - potential[i_x][i_y][i_z-1])/(2.0*DZ)
+
 # assigns values to M and potBC in M x = potBC, using boundary conditions BC0 and BCN
 def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):
   (NX,NY,NZ) = (N[0],N[1],N[2])
