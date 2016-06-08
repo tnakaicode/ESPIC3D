@@ -96,25 +96,22 @@ def solveLinearSystem(M,B,solType,relTol,absTol,useCython=True):
 def solveForPotential(N,M,potBC,solType,relTol,absTol,useCython=True):
   return put1DArrayOnGrid(N,solveLinearSystem(M,potBC,solType,relTol,absTol,useCython))
 
-#
-# definitely add a unit test for this method
-#
-# just use same accept V and E, and pass in V, check against E
-#
+# call this potentialToNegGradPot?
 def potentialToElectricField(potential,D):
-  (DX,DY,DZ) = (D[0],D[1],D[2])
   dim = len(potential.shape)
 
+  DX = D[0]
   if dim == 1:
-    electricField = np.zeros(potential.shape[0],1)
-  elif dim == 2:
-    electricField = np.zeros(potential.shape[0],potential.shape[1],2)
+    electricField = np.zeros((potential.shape[0],1))
   else:
-    electricField = np.zeros(potential.shape[0],potential.shape[1],potential.shape[2],3)
+    DY = D[1]
+    if dim == 2:
+      electricField = np.zeros((potential.shape[0],potential.shape[1],2))
+    else:
+      DZ = D[2]
+      electricField = np.zeros((potential.shape[0],potential.shape[1],potential.shape[2],3))
 
-  #
-  # almost certianly a better way to do this, but worry about that later
-  #
+  # refactor ?
   if dim == 1:
     for i_x in range(potential.shape[0]):
       if i_x == 0:
@@ -165,6 +162,8 @@ def potentialToElectricField(potential,D):
             electricField[i_x][i_y][i_z][2] = -(potential[i_x][i_y][i_z]   - potential[i_x][i_y][i_z-1])/DZ
           else:
             electricField[i_x][i_y][i_z][2] = -(potential[i_x][i_y][i_z+1] - potential[i_x][i_y][i_z-1])/(2.0*DZ)
+
+  return electricField
 
 # assigns values to M and potBC in M x = potBC, using boundary conditions BC0 and BCN
 def setupBCRows(N,D,BC0,BCN,M,potBC,rowsNotBC):

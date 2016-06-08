@@ -7,9 +7,6 @@ from dirichlet import dirichlet as dirBC
 import numpy as np
 import math
 
-absTol = 0.0
-relTol = 1.0e-3
-
 # 1D grid
 NX_1D = 10
 LX_1D = 1.2
@@ -113,7 +110,57 @@ def E4_3D(x,y,z):
                     a*math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z), \
                     math.sqrt(2.0)*a*math.exp(a*x)*math.exp(a*y)*math.cos(math.sqrt(2.0)*a*z)])
 
+def testPotentialToElectricField():
+  absTol = 1.0e-2
+  relTol = 0.0
+
+  def test(array1,array2):
+    assert np.allclose(array1,array2,relTol,absTol)
+
+  def test1D(potential,field):
+    potAccept1D   = np.zeros(NX_1D+1)
+    fieldAccept1D = np.zeros((NX_1D+1,1))
+    for i in range(NX_1D+1):
+      potAccept1D[i]   = potential(X0_1D+DX_1D*i)
+      fieldAccept1D[i] = field(    X0_1D+DX_1D*i)
+
+    test(esSolve.potentialToElectricField(potAccept1D,[DX_1D]),
+         fieldAccept1D)
+
+  def test2D(potential,field):
+    potAccept2D   = np.zeros((NX_2D+1,NY_2D+1))
+    fieldAccept2D = np.zeros((NX_2D+1,NY_2D+1,2))
+    for i,j in np.ndindex(potAccept2D.shape):
+      potAccept2D[i,j]   = potential(X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
+      fieldAccept2D[i,j] = field(    X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
+    
+    test(esSolve.potentialToElectricField(potAccept2D,[DX_2D,DY_2D]),
+         fieldAccept2D)
+
+  def test3D(potential,field):
+    potAccept3D   = np.zeros((NX_3D+1,NY_3D+1,NZ_3D+1))
+    fieldAccept3D = np.zeros((NX_3D+1,NY_3D+1,NZ_3D+1,3))
+    for i,j,k in np.ndindex(potAccept3D.shape):
+      # consider using np.fromfunction here
+      potAccept3D[i,j,k]   = potential(X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
+      fieldAccept3D[i,j,k] = field(    X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
+    
+    test(esSolve.potentialToElectricField(potAccept3D,[DX_3D,DY_3D,DZ_3D]),
+         fieldAccept3D)
+
+  # Run the tests
+  test1D(V1_1D,E1_1D)
+
+  for testFuncs in [[V1_2D,E1_2D], [V2_2D,E2_2D], [V3_2D,E3_2D], [V5_2D,E5_2D]]:#, [V4_2D,E4_2D]]:
+    test2D(testFuncs[0],testFuncs[1])
+
+  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D]]:#, [V4_3D,E4_3D]]:
+    test3D(testFuncs[0],testFuncs[1])
+
 def test_laplace():
+  absTol = 0.0
+  relTol = 1.0e-3
+
   def test(array1,array2):
     assert np.allclose(array1,array2,relTol,absTol)
 
@@ -224,10 +271,10 @@ def test_laplace():
                     test(potCalculated3D,potAccept3D)
 
   # Run the tests
-  test1D(V1_1D,E1_1D)
+#  test1D(V1_1D,E1_1D)
 
-  for testFuncs in [[V1_2D,E1_2D], [V2_2D,E2_2D], [V3_2D,E3_2D], [V5_2D,E5_2D]]:#, [V4_2D,E4_2D]]:
-    test2D(testFuncs[0],testFuncs[1])
+#  for testFuncs in [[V1_2D,E1_2D], [V2_2D,E2_2D], [V3_2D,E3_2D], [V5_2D,E5_2D]]:#, [V4_2D,E4_2D]]:
+#    test2D(testFuncs[0],testFuncs[1])
 
-  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D]]:#, [V4_3D,E4_3D]]:
-    test3D(testFuncs[0],testFuncs[1])
+#  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D]]:#, [V4_3D,E4_3D]]:
+#    test3D(testFuncs[0],testFuncs[1])
