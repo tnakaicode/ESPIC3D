@@ -1,4 +1,5 @@
 import sys
+import math
 import numpy as np
 import linAlgSolveCy
 import linAlgSolve
@@ -95,6 +96,61 @@ def solveLinearSystem(M,B,solType,relTol,absTol,useCython=True):
 # Solve linear system M x = potBC but return x on the computational grid
 def solveForPotential(N,M,potBC,solType,relTol,absTol,useCython=True):
   return put1DArrayOnGrid(N,solveLinearSystem(M,potBC,solType,relTol,absTol,useCython))
+
+# R_0 = [X0,Y0,Z0]
+# R   = [X, Y, Z]
+def electricFieldAtPoint(potential,D,R_0,R):
+  E_grid = potentialToElectricField(potential,D)
+
+  dim = len(potential.shape)
+
+  (DX,X_0,X)  = (D[0],R_0[0],R[0])
+  X_disp      = X - X_0
+  leftIndices = [math.floor(X_disp/DX)]
+
+  if dim > 1:
+    (DY,Y_0,Y)  = (D[1],R_0[1],R[1])
+    Y_disp      = Y - Y_0
+    leftIndices.append(math.floor(Y_disp/DY))
+
+    if dim > 2:
+      (DZ,Z_0,Z)  = (D[2],R_0[2],R[2])
+      Z_disp      = Z - Z_0
+      leftIndices.append(math.floor(Z_disp/DZ))
+
+  rightIndices = [index + 1 for index in leftIndices]
+
+  # ANY ISSUES WITH BOUNDARIES ???
+
+  if dim == 1:
+    H_x = X_disp/DX - leftIndices[0]
+
+    E_point = (1.0 - H_x) * E[leftIndices[0]] +
+              H_x         * E[rightIndices[0]] 
+
+  elif dim == 2:
+    H_x = X_disp/DX - leftIndices[0]
+    H_y = Y_disp/DY - leftIndices[1]
+
+    E_point = (1.0 - H_x)*(1.0 - H_y) * E[leftIndices[0]][leftIndices[1]] +
+              (1.0 - H_x)*H_y         * E[leftIndices[0]][rightIndices[1]] + 
+              H_x        *(1.0 - H_y) * E[rightIndices[0]][leftIndices[1]] + 
+              H_x        *H_y         * E[rightIndices[0]][rightIndices[1]] + 
+              
+
+  elif dim == 3:
+    H_x = X_disp/DX - leftIndices[0]
+    H_y = Y_disp/DY - leftIndices[1]
+    H_z = Z_disp/DZ - leftIndices[2]
+
+    E_point = (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E[leftIndices[0]][leftIndices[1]][leftIndices[2]] +
+              (1.0 - H_x)*(1.0 - H_y)*H_z         * E[leftIndices[0]][leftIndices[1]][rightIndices[2]] +
+              (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E[leftIndices[0]][leftIndices[1]][leftIndices[2]] +
+              (1.0 - H_x)*H_y        *(1.0 - H_z) * E[leftIndices[0]][rightIndices[1]][leftIndices[2]] +
+              (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E[leftIndices[0]][leftIndices[1]][leftIndices[2]] +
+              H_x        *(1.0 - H_y)*(1.0 - H_z) * E[rightIndices[0]][leftIndices[1]][leftIndices[2]]
+
+  return E_point
 
 # call this potentialToNegGradPot?
 def potentialToElectricField(potential,D):
