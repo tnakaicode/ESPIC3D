@@ -110,6 +110,29 @@ def E4_3D(x,y,z):
                     a*math.exp(a*x)*math.exp(a*y)*math.sin(math.sqrt(2.0)*a*z), \
                     math.sqrt(2.0)*a*math.exp(a*x)*math.exp(a*y)*math.cos(math.sqrt(2.0)*a*z)])
 
+def testElectricFieldAtPoint():
+  absTol = 1.0e-2
+  relTol = 0.0
+
+  def test(array1,array2):
+    assert np.allclose(array1,array2,relTol,absTol)
+ 
+  def test1D():
+    def E(x):
+      return NX_1D*(x - X0_1D)/LX_1D
+
+    E_grid = np.zeros((NX_1D+1,1))
+    for i in range(NX_1D+1):
+      E_grid[i] = E(X0_1D+DX_1D*i)
+
+    numPointsToTestBetweenGridPoints = 10
+    for i in range(numPointsToTestBetweenGridPoints*NX_1D + 1): 
+      Xi = X0_1D + DX_1D*i/numPointsToTestBetweenGridPoints
+
+    assert E(Xi) == esSolve.electricFieldAtPoint(E_grid,[DX_1D],[X0_1D],[Xi])
+
+  test1D()
+
 def testPotentialToElectricField():
   absTol = 1.0e-2
   relTol = 0.0
@@ -271,10 +294,10 @@ def test_laplace():
                     test(potCalculated3D,potAccept3D)
 
   # Run the tests
-#  test1D(V1_1D,E1_1D)
+  test1D(V1_1D,E1_1D)
 
-#  for testFuncs in [[V1_2D,E1_2D], [V2_2D,E2_2D], [V3_2D,E3_2D], [V5_2D,E5_2D]]:#, [V4_2D,E4_2D]]:
-#    test2D(testFuncs[0],testFuncs[1])
+  for testFuncs in [[V1_2D,E1_2D], [V2_2D,E2_2D], [V3_2D,E3_2D], [V5_2D,E5_2D]]:#, [V4_2D,E4_2D]]:
+    test2D(testFuncs[0],testFuncs[1])
 
-#  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D]]:#, [V4_3D,E4_3D]]:
-#    test3D(testFuncs[0],testFuncs[1])
+  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D]]:#, [V4_3D,E4_3D]]:
+    test3D(testFuncs[0],testFuncs[1])

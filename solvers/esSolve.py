@@ -99,10 +99,8 @@ def solveForPotential(N,M,potBC,solType,relTol,absTol,useCython=True):
 
 # R_0 = [X0,Y0,Z0]
 # R   = [X, Y, Z]
-def electricFieldAtPoint(potential,D,R_0,R):
-  E_grid = potentialToElectricField(potential,D)
-
-  dim = len(potential.shape)
+def electricFieldAtPoint(E_grid,D,R_0,R):
+  dim = len(E_grid.shape) - 1
 
   (DX,X_0,X)  = (D[0],R_0[0],R[0])
   X_disp      = X - X_0
@@ -125,17 +123,20 @@ def electricFieldAtPoint(potential,D,R_0,R):
   if dim == 1:
     H_x = X_disp/DX - leftIndices[0]
 
-    E_point = (1.0 - H_x) * E[leftIndices[0]] +
-              H_x         * E[rightIndices[0]] 
+    if rightIndices[0] >= E_grid.shape[0]:
+      E_point = E_grid[leftIndices[0]]
+    else:
+      E_point = (1.0 - H_x) * E_grid[leftIndices[0]] + \
+                H_x         * E_grid[rightIndices[0]] 
 
   elif dim == 2:
     H_x = X_disp/DX - leftIndices[0]
     H_y = Y_disp/DY - leftIndices[1]
 
-    E_point = (1.0 - H_x)*(1.0 - H_y) * E[leftIndices[0]][leftIndices[1]] +
-              (1.0 - H_x)*H_y         * E[leftIndices[0]][rightIndices[1]] + 
-              H_x        *(1.0 - H_y) * E[rightIndices[0]][leftIndices[1]] + 
-              H_x        *H_y         * E[rightIndices[0]][rightIndices[1]] + 
+    E_point = (1.0 - H_x)*(1.0 - H_y) * E_grid[leftIndices[0]][leftIndices[1]] + \
+              (1.0 - H_x)*H_y         * E_grid[leftIndices[0]][rightIndices[1]] + \
+              H_x        *(1.0 - H_y) * E_grid[rightIndices[0]][leftIndices[1]] + \
+              H_x        *H_y         * E_grid[rightIndices[0]][rightIndices[1]]
               
 
   elif dim == 3:
@@ -143,12 +144,12 @@ def electricFieldAtPoint(potential,D,R_0,R):
     H_y = Y_disp/DY - leftIndices[1]
     H_z = Z_disp/DZ - leftIndices[2]
 
-    E_point = (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E[leftIndices[0]][leftIndices[1]][leftIndices[2]] +
-              (1.0 - H_x)*(1.0 - H_y)*H_z         * E[leftIndices[0]][leftIndices[1]][rightIndices[2]] +
-              (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E[leftIndices[0]][leftIndices[1]][leftIndices[2]] +
-              (1.0 - H_x)*H_y        *(1.0 - H_z) * E[leftIndices[0]][rightIndices[1]][leftIndices[2]] +
-              (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E[leftIndices[0]][leftIndices[1]][leftIndices[2]] +
-              H_x        *(1.0 - H_y)*(1.0 - H_z) * E[rightIndices[0]][leftIndices[1]][leftIndices[2]]
+    E_point = (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E_grid[leftIndices[0]][leftIndices[1]][leftIndices[2]] + \
+              (1.0 - H_x)*(1.0 - H_y)*H_z         * E_grid[leftIndices[0]][leftIndices[1]][rightIndices[2]] + \
+              (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E_grid[leftIndices[0]][leftIndices[1]][leftIndices[2]] + \
+              (1.0 - H_x)*H_y        *(1.0 - H_z) * E_grid[leftIndices[0]][rightIndices[1]][leftIndices[2]] + \
+              (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E_grid[leftIndices[0]][leftIndices[1]][leftIndices[2]] + \
+              H_x        *(1.0 - H_y)*(1.0 - H_z) * E_grid[rightIndices[0]][leftIndices[1]][leftIndices[2]]
 
   return E_point
 
