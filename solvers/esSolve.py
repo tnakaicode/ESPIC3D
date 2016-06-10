@@ -118,38 +118,63 @@ def electricFieldAtPoint(E_grid,D,R_0,R):
 
   rightIndices = [index + 1 for index in leftIndices]
 
-  # ANY ISSUES WITH BOUNDARIES ???
-
   if dim == 1:
     H_x = X_disp/DX - leftIndices[0]
 
-    if rightIndices[0] >= E_grid.shape[0]:
-      E_point = E_grid[leftIndices[0]]
-    else:
-      E_point = (1.0 - H_x) * E_grid[leftIndices[0]] + \
-                H_x         * E_grid[rightIndices[0]] 
+    E_point = (1.0 - H_x) * E_grid[leftIndices[0]]
+
+    if rightIndices[0] < E_grid.shape[0]:
+      E_point += H_x * E_grid[rightIndices[0]]
 
   elif dim == 2:
     H_x = X_disp/DX - leftIndices[0]
     H_y = Y_disp/DY - leftIndices[1]
 
-    E_point = (1.0 - H_x)*(1.0 - H_y) * E_grid[leftIndices[0]][leftIndices[1]] + \
-              (1.0 - H_x)*H_y         * E_grid[leftIndices[0]][rightIndices[1]] + \
-              H_x        *(1.0 - H_y) * E_grid[rightIndices[0]][leftIndices[1]] + \
-              H_x        *H_y         * E_grid[rightIndices[0]][rightIndices[1]]
-              
+    E_point = (1.0 - H_x) * (1.0 - H_y) * E_grid[leftIndices[0]][leftIndices[1]]
+
+    rightIndex_x_valid = (rightIndices[0] < E_grid.shape[0])
+    rightIndex_y_valid = (rightIndices[1] < E_grid.shape[1])
+
+    if rightIndex_x_valid:
+      E_point += H_x * (1.0 - H_y) * E_grid[rightIndices[0]][leftIndices[1]]
+
+      if rightIndex_y_valid:
+        E_point += H_x * H_y * E_grid[rightIndices[0]][rightIndices[1]]
+
+    if rightIndex_y_valid:
+      E_point += (1.0 - H_x) * H_y * E_grid[leftIndices[0]][rightIndices[1]]
 
   elif dim == 3:
     H_x = X_disp/DX - leftIndices[0]
     H_y = Y_disp/DY - leftIndices[1]
     H_z = Z_disp/DZ - leftIndices[2]
 
-    E_point = (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E_grid[leftIndices[0]][leftIndices[1]][leftIndices[2]] + \
-              (1.0 - H_x)*(1.0 - H_y)*H_z         * E_grid[leftIndices[0]][leftIndices[1]][rightIndices[2]] + \
-              (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E_grid[leftIndices[0]][leftIndices[1]][leftIndices[2]] + \
-              (1.0 - H_x)*H_y        *(1.0 - H_z) * E_grid[leftIndices[0]][rightIndices[1]][leftIndices[2]] + \
-              (1.0 - H_x)*(1.0 - H_y)*(1.0 - H_z) * E_grid[leftIndices[0]][leftIndices[1]][leftIndices[2]] + \
-              H_x        *(1.0 - H_y)*(1.0 - H_z) * E_grid[rightIndices[0]][leftIndices[1]][leftIndices[2]]
+    rightIndex_x_valid = (rightIndices[0] < E_grid.shape[0])
+    rightIndex_y_valid = (rightIndices[1] < E_grid.shape[1])
+    rightIndex_z_valid = (rightIndices[2] < E_grid.shape[2])
+
+    E_point = (1.0 - H_x) * (1.0 - H_y) * (1.0 - H_z) * E_grid[leftIndices[0]][leftIndices[1]][leftIndices[2]]
+
+    if rightIndex_x_valid:
+      E_point += H_x * (1.0 - H_y) * (1.0 - H_z) * E_grid[rightIndices[0]][leftIndices[1]][leftIndices[2]]
+
+      if rightIndex_y_valid:
+        E_point += H_x * H_y * (1.0 - H_z) * E_grid[rightIndices[0]][rightIndices[1]][leftIndices[2]]
+      
+        if rightIndex_z_valid:
+          E_point += H_x * H_y * H_z * E_grid[rightIndices[0]][rightIndices[1]][rightIndices[2]]
+
+      if rightIndex_z_valid:
+        E_point += H_x * (1.0 - H_y) * H_z * E_grid[rightIndices[0]][leftIndices[1]][rightIndices[2]]
+
+    if rightIndex_y_valid:
+      E_point += (1.0 - H_x) * H_y *(1.0 - H_z) * E_grid[leftIndices[0]][rightIndices[1]][leftIndices[2]]
+
+      if rightIndex_z_valid:
+        E_point += (1.0 - H_x) * H_y * H_z * E_grid[leftIndices[0]][rightIndices[1]][rightIndices[2]]
+      
+    if rightIndex_z_valid:
+      E_point += (1.0 - H_x) * (1.0 - H_y) * H_z * E_grid[leftIndices[0]][leftIndices[1]][rightIndices[2]]
 
   return E_point
 

@@ -111,7 +111,7 @@ def E4_3D(x,y,z):
                     math.sqrt(2.0)*a*math.exp(a*x)*math.exp(a*y)*math.cos(math.sqrt(2.0)*a*z)])
 
 def testElectricFieldAtPoint():
-  absTol = 1.0e-2
+  absTol = 1.0e-5
   relTol = 0.0
 
   def test(array1,array2):
@@ -119,19 +119,67 @@ def testElectricFieldAtPoint():
  
   def test1D():
     def E(x):
-      return NX_1D*(x - X0_1D)/LX_1D
+      return math.exp(x)
 
     E_grid = np.zeros((NX_1D+1,1))
+
     for i in range(NX_1D+1):
       E_grid[i] = E(X0_1D+DX_1D*i)
 
     numPointsToTestBetweenGridPoints = 10
+
     for i in range(numPointsToTestBetweenGridPoints*NX_1D + 1): 
       Xi = X0_1D + DX_1D*i/numPointsToTestBetweenGridPoints
 
-    assert E(Xi) == esSolve.electricFieldAtPoint(E_grid,[DX_1D],[X0_1D],[Xi])
+    test(esSolve.electricFieldAtPoint(E_grid,[DX_1D],[X0_1D],[Xi]),E(Xi))
+
+  def test2D():
+    def E(x,y):
+      return math.exp(x+y)
+
+    E_grid = np.zeros((NX_2D+1,NY_2D+1,2))
+
+    for i in range(NX_2D+1):
+      for j in range(NY_2D+1):
+        E_grid[i][j] = E(X0_2D+DX_2D*i,Y0_2D+DY_2D*j)
+
+    numPointsToTestBetweenGridPoints_x = 10
+    numPointsToTestBetweenGridPoints_y = 10
+
+    for i in range(numPointsToTestBetweenGridPoints_x*NX_2D + 1): 
+      for j in range(numPointsToTestBetweenGridPoints_y*NY_2D + 1): 
+        Xi = X0_2D + DX_2D*i/numPointsToTestBetweenGridPoints_x
+        Yi = Y0_2D + DY_2D*j/numPointsToTestBetweenGridPoints_y
+ 
+    test(esSolve.electricFieldAtPoint(E_grid,[DX_2D,DY_2D],[X0_2D,Y0_2D],[Xi,Yi]),E(Xi,Yi))
+
+  def test3D():
+    def E(x,y,z):
+      return math.exp(x+y+z)
+
+    E_grid = np.zeros((NX_3D+1,NY_3D+1,NZ_3D,3))
+
+    for i in range(NX_3D+1):
+      for j in range(NY_3D+1):
+        for k in range(NY_3D+1):
+          E_grid[i][j][k] = E(X0_3D+DX_3D*i,Y0_3D+DY_3D*j,Z0_3D+DZ_3D*k)
+
+    numPointsToTestBetweenGridPoints_x = 10
+    numPointsToTestBetweenGridPoints_y = 10
+    numPointsToTestBetweenGridPoints_z = 10
+
+    for i in range(numPointsToTestBetweenGridPoints_x*NX_3D + 1): 
+      for j in range(numPointsToTestBetweenGridPoints_y*NY_3D + 1): 
+        for k in range(numPointsToTestBetweenGridPoints_z*NY_3D + 1): 
+          Xi = X0_3D + DX_3D*i/numPointsToTestBetweenGridPoints_x
+          Yi = Y0_3D + DY_3D*j/numPointsToTestBetweenGridPoints_y
+          Zi = Z0_3D + DZ_3D*k/numPointsToTestBetweenGridPoints_z
+ 
+    test(esSolve.electricFieldAtPoint(E_grid,[DX_3D,DY_3D,DZ_3D],[X0_3D,Y0_3D,Z0_3D],[Xi,Yi,Zi]),E(Xi,Yi,Zi))
 
   test1D()
+  test2D()
+  test3D()
 
 def testPotentialToElectricField():
   absTol = 1.0e-2
