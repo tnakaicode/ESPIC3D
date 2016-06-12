@@ -5,20 +5,27 @@
 2. Parallelize: CUDA, OpenMP / MPI
      http://wiki.scipy.org/PerformancePython
 
-3. should test absolute in addition to relative tolerance?
+3. Should test absolute in addition to relative tolerance?
 
 4. testLinAlg needs more test cases
 
-5. change system exits to raise exceptions instead
+5. Change system exits to raise exceptions instead
 
 6. esSolve.py --> poisson.py ?
 
-7. switch BCs from E to dV/dx to make more generic?
+7. Switch BCs from E to dV/dx to make more generic?
 
-8. get final 2D and 3D test cases working
+8. Get final 2D and 3D test cases working
 
-9. figure out how to deal with all neumann bcs (user specifies V at point?), or throw error if a user attempts it
+9. Figure out how to deal with all neumann bcs (user specifies V at point?), or throw error if a user attempts it
 
-10. make class for field? should be generic (not potential-specific), plot() method
+10. Make class for field? should be generic (not potential-specific), plot() method
 
-11. make more test functions for esSolve.electricFieldAtPoint()
+11. Make more test functions for esSolve.electricFieldAtPoint()
+
+12. Add unit test for particle::push()
+
+13. Make example showing particle push
+
+14. Once get poisson implemented, then need mechanism for particle to feedbackon field (deposit charge)
+
