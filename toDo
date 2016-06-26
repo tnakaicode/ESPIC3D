@@ -25,6 +25,4 @@
 
 12. there's an issue where if you increase NX, the 1D test fails
 
-13. relativistic push and example
-
-14. Once get poisson implemented, then need mechanism for particle to feedbackon field (deposit charge)
+13. Once get poisson implemented, then need mechanism for particle to feedbackon field (deposit charge)
