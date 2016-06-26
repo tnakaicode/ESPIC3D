@@ -229,7 +229,7 @@ def testPotentialToElectricField():
     test3D(testFuncs[0],testFuncs[1])
 
 def test_laplace():
-  absTol = 1.0e-1
+  absTol = 1.0e-3
   relTol = 0.0
 
   def test(array1,array2):
@@ -344,8 +344,8 @@ def test_laplace():
   # Run the tests
   test1D(V1_1D,E1_1D)
 
-#  for testFuncs in [[V1_2D,E1_2D], [V2_2D,E2_2D], [V3_2D,E3_2D], [V5_2D,E5_2D]]:#, [V4_2D,E4_2D]]:
-#    test2D(testFuncs[0],testFuncs[1])
+  for testFuncs in [[V1_2D,E1_2D], [V2_2D,E2_2D], [V3_2D,E3_2D], [V5_2D,E5_2D]]:#, [V4_2D,E4_2D]]:
+    test2D(testFuncs[0],testFuncs[1])
 
-#  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D]]:#, [V4_3D,E4_3D]]:
-#    test3D(testFuncs[0],testFuncs[1])
+  for testFuncs in [[V1_3D,E1_3D], [V2_3D,E2_3D], [V3_3D,E3_3D]]:#, [V4_3D,E4_3D]]:
+    test3D(testFuncs[0],testFuncs[1])

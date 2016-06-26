@@ -19,11 +19,11 @@ def iterate(A,B,solType,relTol,absTol):
 
 # Solves A x = B using Jacobi iteration
 def jacobi(A,B,relTol,absTol):
-  return iterate(A,B,"jacobi",relTol/100000.0,absTol/100000.0)
+  return iterate(A,B,"jacobi",relTol/1000.0,absTol/1000.0)
 
 # Solves A x = B using Gauss Seidel iteration
 def gaussSeidel(A,B,relTol,absTol):
-  return iterate(A,B,"gaussSeidel",relTol/100000.0,absTol/100000.0)
+  return iterate(A,B,"gaussSeidel",relTol/100.0,absTol/100.0)
 
 # Solves A x = B directly
 def direct(A,B):
