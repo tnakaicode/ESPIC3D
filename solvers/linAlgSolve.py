@@ -2,7 +2,7 @@ import numpy as np
 
 # Solves A x = B iteratively
 def iterate(A,B,solType,relTol,absTol):
-  maxIterations = 1000000
+  maxIterations = 10000000
   x = np.copy(B)
   for iteration in range(maxIterations):
     oldX = np.copy(x)
@@ -23,7 +23,7 @@ def jacobi(A,B,relTol,absTol):
 
 # Solves A x = B using Gauss Seidel iteration
 def gaussSeidel(A,B,relTol,absTol):
-  return iterate(A,B,"gaussSeidel",relTol/100.0,absTol/100.0)
+  return iterate(A,B,"gaussSeidel",relTol/1000.0,absTol/1000.0)
 
 # Solves A x = B directly
 def direct(A,B):

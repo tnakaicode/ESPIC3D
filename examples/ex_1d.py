@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import esSolve
 from dirichlet import dirichlet as dirBC
 
-NX   = 10
+NX   = 100
 LX   = 1.2
 
 DX   = LX / NX

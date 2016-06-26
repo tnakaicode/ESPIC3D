@@ -2,30 +2,29 @@ import numpy as np
 
 class particle(object):
   def __init__(self,*args):
-    mass           = args[0]
-    charge         = args[1]
-    position       = args[2]
-    velocity       = args[3]
-    chargeOverMass = charge/mass
+    self.mass           = args[0]
+    self.charge         = args[1]
+    self.position       = np.array(args[2])
+    self.velocity       = np.array(args[3])
+    self.chargeOverMass = self.charge/self.mass
 
-  def electricFieldAtPoint(EonGrid,N,D,X0,Y0,Z0,X,Y,Z):
+  # for a test, do just magnetic field and check circle
     
-
-
-    # remember, different on boundaries
-
-
   # Boris push
   # need to use momentum for relativistic
   # google relativistic boris push
-  def push(Vi,EonGrid,B,dt):
 
-    t = 0.5*dt*chargeOverMass*B
-    s = 2.0*t/(1.0 + np.dot(t,t))
+  # E and B are supposed to be at particle position
+  def push(self,dt,E,B=None):
+    if B:
+      t             = 0.5*dt*self.chargeOverMass*B
+      s             = 2.0*t/(1.0 + np.dot(t,t))
 
-    Vminus = Vi     + 0.5*dt*chargeOverMass*E
-    Vprime = Vminus + np.cross(Vminus,t)
-    Vplus  = Vminus + np.cross(Vprime,s)
-    Vf     = Vplus  + 0.5*dt*chargeOverMass*E
-
-    # SHOULD UPDATE VELOCITY / MOMENTUM AND POSITION
+      V_minus       = self.velocity + 0.5*dt*self.chargeOverMass*E
+      V_prime       = V_minus       + np.cross(V_minus,t)
+      V_plus        = V_minus       + np.cross(V_prime,s)
+      self.velocity = V_plus        + 0.5*dt*self.chargeOverMass*E
+    else:
+      self.velocity = self.velocity + dt*self.chargeOverMass*E
+    
+    self.position = self.position + dt*self.velocity
