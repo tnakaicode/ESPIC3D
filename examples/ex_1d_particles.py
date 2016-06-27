@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import math
 import esSolve
 import numpy as np
+import particleUtils
 from particle import particle
 import scipy.constants
 from dirichlet import dirichlet as dirBC
@@ -63,25 +64,21 @@ for step in xrange(steps+1):
 
   if step == 0:
     # Back velocity up 1/2 step
-    electron_NR.velocity       = electron_NR.velocity - 0.5*DT_NR*(charge/mass)*electricFieldAtPoint_NR
+    electron_NR.velocity       = electron_NR.velocity       - 0.5*DT_NR*(charge/mass)*electricFieldAtPoint_NR
     electron_R_NRpush.velocity = electron_R_NRpush.velocity - 0.5*DT_R*(charge/mass)*electricFieldAtPoint_R_NRpush
     
-    gamma = 1.0/math.sqrt(1.0 - np.dot(electron_R_Rpush.velocity,electron_R_Rpush.velocity)/pow(scipy.constants.speed_of_light,2.0))
-    momentum_0 = gamma * electron_R_Rpush.mass * electron_R_Rpush.velocity
-    momentum_minusHalf = momentum_0 - 0.5*DT_R*electron_R_Rpush.charge*electricFieldAtPoint_R_Rpush
-    momentumOverMass = momentum_minusHalf / mass
-    electron_R_Rpush.velocity = momentumOverMass / math.sqrt(1.0 + np.dot(momentumOverMass,momentumOverMass)/pow(scipy.constants.speed_of_light,2.0))
+    momentum_0                 = particleUtils.velocityToMomentum(electron_R_Rpush.mass,electron_R_Rpush.velocity)
+    momentum_minusHalf         = momentum_0 - 0.5*DT_R*electron_R_Rpush.charge*electricFieldAtPoint_R_Rpush
+    electron_R_Rpush.velocity  = particleUtils.momentumToVelocity(electron_R_Rpush.mass,momentum_minusHalf)
  
   elif step == steps:
-    # Advance velocity by one step
-    electron_NR.velocity       = electron_NR.velocity + 0.5*DT_NR*(charge/mass)*electricFieldAtPoint_NR
+    # Advance velocity by 1/2 step
+    electron_NR.velocity       = electron_NR.velocity       + 0.5*DT_NR*(charge/mass)*electricFieldAtPoint_NR
     electron_R_NRpush.velocity = electron_R_NRpush.velocity + 0.5*DT_R*(charge/mass)*electricFieldAtPoint_R_NRpush
 
-    gamma = 1.0/math.sqrt(1.0 - np.dot(electron_R_Rpush.velocity,electron_R_Rpush.velocity)/pow(scipy.constants.speed_of_light,2.0))
-    momentum_N = gamma * electron_R_Rpush.mass * electron_R_Rpush.velocity
-    momentum_plusHalf = momentum_N + 0.5*DT_R*electron_R_Rpush.charge*electricFieldAtPoint_R_Rpush
-    momentumOverMass = momentum_plusHalf / mass
-    electron_R_Rpush.velocity = momentumOverMass / math.sqrt(1.0 + np.dot(momentumOverMass,momentumOverMass)/pow(scipy.constants.speed_of_light,2.0))
+    momentum_N                 = particleUtils.velocityToMomentum(electron_R_Rpush.mass,electron_R_Rpush.velocity)
+    momentum_plusHalf          = momentum_N + 0.5*DT_R*electron_R_Rpush.charge*electricFieldAtPoint_R_Rpush
+    electron_R_Rpush.velocity  = particleUtils.momentumToVelocity(electron_R_Rpush.mass,momentum_plusHalf)
 
   else:
     # Push particle
@@ -97,18 +94,9 @@ for step in xrange(steps+1):
   velocities_R_NRpush.append(electron_R_NRpush.velocity[0])
 
 seconds_NR = [i*DT_NR for i in xrange(steps + 2)] 
-seconds_R = [i*DT_R for i in xrange(steps + 2)]
+seconds_R  = [i*DT_R for i in xrange(steps + 2)]
 
 # eric: subtlety here where ther eis a 0.5*DT for some
-
-#plt.plot(seconds,positions)
-#plt.show()
-
-print len(seconds_R)
-print len(seconds_NR)
-print len(velocities_NR)
-print len(velocities_R_Rpush)
-print len(velocities_R_NRpush)
 
 plt.plot(seconds_NR,velocities_NR)
 plt.show()

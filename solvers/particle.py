@@ -1,6 +1,7 @@
 import numpy as np
 import math
-import scipy.constants
+import particleUtils
+#import scipy.constants
 
 class particle(object):
   def __init__(self,*args):
@@ -42,10 +43,8 @@ class particle(object):
       #V_plus        = V_minus       + np.cross(V_prime,s)
       #self.velocity = V_plus        + 0.5*dt*self.chargeOverMass*E
     else:
-      gamma = 1.0/math.sqrt(1.0 - np.dot(self.velocity,self.velocity)/pow(scipy.constants.speed_of_light,2.0))
-      momentum = gamma * self.mass * self.velocity
-      momentum = momentum + dt*self.charge*E
-      momentumOverMass = momentum / self.mass
-      self.velocity = momentumOverMass / math.sqrt(1.0 + np.dot(momentumOverMass,momentumOverMass)/pow(scipy.constants.speed_of_light,2.0))
+      momentum      = particleUtils.velocityToMomentum(self.mass,self.velocity)
+      momentum      = momentum + dt*self.charge*E
+      self.velocity = particleUtils.momentumToVelocity(self.mass,momentum)
 
     self.position = self.position + dt*self.velocity
