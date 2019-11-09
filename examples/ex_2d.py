@@ -1,11 +1,12 @@
+from mpl_toolkits.mplot3d import axes3d
 import os
 import sys
 import time
 import matplotlib.pyplot as plt
 import numpy as np
+
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 import esSolve
-from mpl_toolkits.mplot3d import axes3d
 from dirichlet import dirichlet as dirBC
 
 NX = 25
@@ -19,8 +20,10 @@ Y0 = 2.0
 
 amplitude = 2.0
 
+
 def nonGroundedWall(Yindex):
-  return amplitude * np.sin(np.pi * Yindex / NY)
+    return amplitude * np.sin(np.pi * Yindex / NY)
+
 
 # Boundary conditions
 V0x = dirBC(np.zeros((NY+1)))
@@ -31,38 +34,44 @@ VNy = dirBC(np.zeros((NX+1)))
 
 start = time.clock()
 
-potential_1 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0)
-potential_2 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=0.5)
-potential_3 = esSolve.laplace2D(NX,DX,V0x,VNx,NY,DY,V0y,VNy,"gaussSeidel",relTol=0.0,absTol=1.0e-3)
+potential_1 = esSolve.laplace2D(
+    NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=1.0)
+potential_2 = esSolve.laplace2D(
+    NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=0.5)
+potential_3 = esSolve.laplace2D(
+    NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=1.0e-3)
 
 end = time.clock()
 
-print("That took",round(end-start,1),"seconds.")
+print("That took", round(end-start, 1), "seconds.")
+
 
 def plot2Darrays(arrays):
-  fig = plt.figure()
-  ax = fig.add_subplot(111, projection='3d')
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
 
-  if len(arrays) == 1:
-    X = np.linspace(X0, X0 + LX, num=arrays[0].shape[0])
-    Y = np.linspace(Y0, Y0 + LY, num=arrays[0].shape[1])
-    X, Y = np.meshgrid(X, Y, indexing='ij')
-  else:
-    X = np.linspace(X0, X0 + LX, num=arrays[0][0].shape[0])
-    Y = np.linspace(Y0, Y0 + LY, num=arrays[0][0].shape[1])
-    X, Y = np.meshgrid(X, Y, indexing='ij')
+    if len(arrays) == 1:
+        X = np.linspace(X0, X0 + LX, num=arrays[0].shape[0])
+        Y = np.linspace(Y0, Y0 + LY, num=arrays[0].shape[1])
+        X, Y = np.meshgrid(X, Y, indexing='ij')
+    else:
+        X = np.linspace(X0, X0 + LX, num=arrays[0][0].shape[0])
+        Y = np.linspace(Y0, Y0 + LY, num=arrays[0][0].shape[1])
+        X, Y = np.meshgrid(X, Y, indexing='ij')
 
-  if len(arrays) == 1:
-      ax.plot_wireframe(X, Y, arrays[0])
-  else:
-    for array in arrays:
-      ax.plot_wireframe(X, Y, array[0][:],label='absolute tolerance = ' + array[1],color=array[2])
+    if len(arrays) == 1:
+        ax.plot_wireframe(X, Y, arrays[0])
+    else:
+        for array in arrays:
+            ax.plot_wireframe(
+                X, Y, array[0][:], label='absolute tolerance = ' + array[1], color=array[2])
 
-  plt.legend(loc='best')
-  plt.show()
+    plt.legend(loc='best')
+    plt.show()
 
-plot2Darrays([[potential_1,'1.0','green'],
-              [potential_2,'0.5','red'],
-              [potential_3,'1.0e-3','blue']])
+
+plot2Darrays([[potential_1, '1.0', 'green'],
+              [potential_2, '0.5', 'red'],
+              [potential_3, '1.0e-3', 'blue']])
 
 plot2Darrays([potential_3])

@@ -5,6 +5,6 @@ from Cython.Distutils import build_ext
 import numpy as np
 
 ext = Extension("linAlgSolveCy", ["linAlgSolveCy.pyx"],
-    include_dirs = [np.get_include()])
+                include_dirs=[np.get_include()])
 setup(ext_modules=[ext],
-      cmdclass = {'build_ext': build_ext})
+      cmdclass={'build_ext': build_ext})
