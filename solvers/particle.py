@@ -1,6 +1,6 @@
 import numpy as np
 import math
-import particleUtils
+from solvers.particleUtils import velocityToMomentum, momentumToVelocity
 #import scipy.constants
 
 class particle(object):
@@ -43,8 +43,8 @@ class particle(object):
       #V_plus        = V_minus       + np.cross(V_prime,s)
       #self.velocity = V_plus        + 0.5*dt*self.chargeOverMass*E
     else:
-      momentum      = particleUtils.velocityToMomentum(self.mass,self.velocity)
+      momentum      = velocityToMomentum(self.mass,self.velocity)
       momentum      = momentum + dt*self.charge*E
-      self.velocity = particleUtils.momentumToVelocity(self.mass,momentum)
+      self.velocity = momentumToVelocity(self.mass,momentum)
 
     self.position = self.position + dt*self.velocity

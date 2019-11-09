@@ -4,8 +4,7 @@ import math
 import numpy as np
 
 sys.path.append(os.path.join('.'))
-import linAlgSolveCy
-import linAlgSolve
+
 
 # Converts grid indices (i,j,k) to 1d array indices
 #   1-D: fieldAs1DArray[i]                          = fieldOn1DGrid[i]
@@ -41,7 +40,7 @@ def applyBC(index,indexNeighbor,BC,D,potBC,M,rowsNotBC):
     else:
       print("invalid bc type")
 
-    rowsNotBC.remove(index)
+    #rowsNotBC.remove(index)
 
 # Return dimension given number of grid indices in each dimension
 def dimension(N):
@@ -76,6 +75,8 @@ def put1DArrayOnGrid(N,array):
 
 # Solve linear system M x = B for x
 def solveLinearSystem(M,B,solType,relTol,absTol,useCython=True):
+  import linAlgSolveCy
+  import linAlgSolve
   if solType == "direct":
     if useCython:
       x = linAlgSolveCy.direct(M,B)

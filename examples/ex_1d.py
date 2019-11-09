@@ -1,9 +1,13 @@
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
+sys.path.append(os.path.join('./'))
+#sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 import matplotlib.pyplot as plt
-import esSolve
-from dirichlet import dirichlet as dirBC
+
+from solvers.esSolve import laplace1D, potentialToElectricField, electricFieldAtPoint
+from solvers.particleUtils import velocityToMomentum, momentumToVelocity
+from solvers.particle import particle
+from solvers.dirichlet import dirichlet as dirBC
 
 NX   = 100
 LX   = 1.2
@@ -15,7 +19,7 @@ VN   = dirBC(2.0)
 
 X0 = 1.5
 
-pot1D = esSolve.laplace1D(NX,DX,V0,VN,"gaussSeidel",relTol=0.0,absTol=1.0e-3,useCython=False)
+pot1D = laplace1D(NX,DX,V0,VN,"gaussSeidel",relTol=0.0,absTol=1.0e-3,useCython=False)
 
 # could use X0 here to plot versus position instead of index
 plt.plot(pot1D)
