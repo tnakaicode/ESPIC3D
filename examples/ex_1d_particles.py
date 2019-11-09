@@ -1,14 +1,16 @@
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
+sys.path.append(os.path.join('./'))
+#sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '../solvers/')
 import matplotlib.pyplot as plt
 import math
-import esSolve
 import numpy as np
-import particleUtils
-from particle import particle
 import scipy.constants
-from dirichlet import dirichlet as dirBC
+
+from solvers.esSolve import laplace1D, potentialToElectricField, electricFieldAtPoint
+from solvers.particleUtils import velocityToMomentum, momentumToVelocity
+from solvers.particle import particle
+from solvers.dirichlet import dirichlet as dirBC
 
 # Grid
 NX     = 20

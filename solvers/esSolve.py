@@ -1,6 +1,9 @@
+import os
 import sys
 import math
 import numpy as np
+
+sys.path.append(os.path.join('.'))
 import linAlgSolveCy
 import linAlgSolve
 
