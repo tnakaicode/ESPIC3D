@@ -1,13 +1,14 @@
-from mpl_toolkits.mplot3d import axes3d
+import numpy as np
+import matplotlib.pyplot as plt
 import os
 import sys
 import time
-import matplotlib.pyplot as plt
-import numpy as np
+from mpl_toolkits.mplot3d import axes3d
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
-import esSolve
-from dirichlet import dirichlet as dirBC
+sys.path.append(os.path.join('./'))
+#sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
+from solvers.esSolve import laplace2D
+from solvers.dirichlet import dirichlet as dirBC
 
 NX = 25
 NY = 30
@@ -26,24 +27,24 @@ def nonGroundedWall(Yindex):
 
 
 # Boundary conditions
-V0x = dirBC(np.zeros((NY+1)))
-VNx = dirBC(np.fromfunction(nonGroundedWall, (NY+1,)))
+V0x = dirBC(np.zeros((NY + 1)))
+VNx = dirBC(np.fromfunction(nonGroundedWall, (NY + 1,)))
 
-V0y = dirBC(np.zeros((NX+1)))
-VNy = dirBC(np.zeros((NX+1)))
+V0y = dirBC(np.zeros((NX + 1)))
+VNy = dirBC(np.zeros((NX + 1)))
 
 start = time.clock()
 
-potential_1 = esSolve.laplace2D(
+potential_1 = laplace2D(
     NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=1.0)
-potential_2 = esSolve.laplace2D(
+potential_2 = laplace2D(
     NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=0.5)
-potential_3 = esSolve.laplace2D(
+potential_3 = laplace2D(
     NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=1.0e-3)
 
 end = time.clock()
 
-print("That took", round(end-start, 1), "seconds.")
+print("That took", round(end - start, 1), "seconds.")
 
 
 def plot2Darrays(arrays):

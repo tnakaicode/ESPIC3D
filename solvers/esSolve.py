@@ -3,7 +3,6 @@ import sys
 import math
 import numpy as np
 sys.path.append(os.path.join('./'))
-
 #sys.path.append(os.path.join('.'))
 
 
@@ -85,22 +84,23 @@ def put1DArrayOnGrid(N, array):
 
 def solveLinearSystem(M, B, solType, relTol, absTol, useCython=False):
     #import linAlgSolveCy
-    import linAlgSolve
+    from solvers.linAlgSolve import direct, jacobi, gaussSeidel
+    #import linAlgSolve
     if solType == "direct":
         if useCython:
             x = linAlgSolveCy.direct(M, B)
         else:
-            x = linAlgSolve.direct(M, B)
+            x = direct(M, B)
     elif solType == "jacobi":
         if useCython:
             x = linAlgSolveCy.jacobi(M, B, relTol, absTol)
         else:
-            x = linAlgSolve.jacobi(M, B, relTol, absTol)
+            x = jacobi(M, B, relTol, absTol)
     elif solType == "gaussSeidel":
         if useCython:
             x = linAlgSolveCy.gaussSeidel(M, B, relTol, absTol)
         else:
-            x = linAlgSolve.gaussSeidel(M, B, relTol, absTol)
+            x = gaussSeidel(M, B, relTol, absTol)
     else:
         sys.exit("esSolve::solveLinearSystem() -- invalid solution type")
 
@@ -137,8 +137,9 @@ def electricFieldAtPoint(E_grid, D, R_0, R):
 
     if dim == 1:
         H_x = X_disp/DX - leftIndices[0]
+        idx = leftIndices[0]
 
-        E_point = (1.0 - H_x) * E_grid[leftIndices[0]]
+        E_point = (1.0 - H_x) * E_grid[idx]
 
         if rightIndices[0] < E_grid.shape[0]:
             E_point += H_x * E_grid[rightIndices[0]]
@@ -384,14 +385,15 @@ def setupNonBCRows(N, D, M, rowsNotBC):
             coeffZ = 0.0
 
         coeffXYZ = -2.0*(coeffX+coeffY+coeffZ)
-        col = row - (NZ+1)*(NY+1)
+        col1, col2 = row - (NZ)*(NY+1), row + (NZ)*(NY+1)
 
-        M[row][col] = coeffX
-        M[row][col] = coeffX
+        M[row][col1] = coeffX
+        M[row][col2] = coeffX
 
         if dim == 2 or dim == 3:
-            M[row][row - (NZ+1)] = coeffY
-            M[row][row + (NZ+1)] = coeffY
+            col1, col2 = row - (NZ), row + (NZ)
+            M[row][col1] = coeffY
+            M[row][col2] = coeffY
 
         if dim == 3:
             M[row][row - 1] = coeffZ

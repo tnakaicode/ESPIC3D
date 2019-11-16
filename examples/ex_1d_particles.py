@@ -1,9 +1,9 @@
-import scipy.constants
 import numpy as np
-import math
 import matplotlib.pyplot as plt
+import math
 import os
 import sys
+import scipy.constants
 sys.path.append(os.path.join('./'))
 #sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '../solvers/')
 
@@ -37,17 +37,17 @@ electron_R_Rpush = particle(mass, charge, [X0_particle], [V0_particle])
 electron_R_NRpush = particle(mass, charge, [X0_particle], [V0_particle])
 
 # Time steps
-T_NR = 0.99*pow(-2.0*mass*pow(LX, 2.0)/(charge*deltaV_NR), 0.5)
-T_R = 0.99*pow(-2.0*mass*pow(LX, 2.0)/(charge*deltaV_R), 0.5)
+T_NR = 0.99 * pow(-2.0 * mass * pow(LX, 2.0) / (charge * deltaV_NR), 0.5)
+T_R = 0.99 * pow(-2.0 * mass * pow(LX, 2.0) / (charge * deltaV_R), 0.5)
 steps = 100
-DT_NR = T_NR/steps
-DT_R = T_R/steps
+DT_NR = T_NR / steps
+DT_R = T_R / steps
 
 # Solve for potential
 pot1D_NR = laplace1D(NX, DX, V0, VN_NR, "gaussSeidel",
-                             relTol=0.0, absTol=1.0e-3*(deltaV_NR), useCython=False)
+                     relTol=0.0, absTol=1.0e-3 * (deltaV_NR), useCython=False)
 pot1D_R = laplace1D(NX, DX, V0, VN_R, "gaussSeidel",
-                            relTol=0.0, absTol=1.0e-3*(deltaV_R), useCython=False)
+                    relTol=0.0, absTol=1.0e-3 * (deltaV_R), useCython=False)
 
 # Compute E = - grad V on grid
 electricFieldOnGrid_NR = potentialToElectricField(pot1D_NR, [DX])
@@ -60,7 +60,7 @@ velocities_R_Rpush = [electron_R_Rpush.velocity[0]]
 positions_R_NRpush = [electron_R_NRpush.position[0]]
 velocities_R_NRpush = [electron_R_NRpush.velocity[0]]
 
-for step in range(steps+1):
+for step in range(steps + 1):
     # Compute E at particle position
     electricFieldAtPoint_NR = electricFieldAtPoint(
         electricFieldOnGrid_NR, [DX], [X0], electron_NR.position)
@@ -71,29 +71,29 @@ for step in range(steps+1):
 
     if step == 0:
         # Back velocity up 1/2 step
-        electron_NR.velocity = electron_NR.velocity - \
-            0.5*DT_NR*(charge/mass)*electricFieldAtPoint_NR
+        electron_NR.velocity = electron_NR.velocity - 0.5 * \
+            DT_NR * (charge / mass) * electricFieldAtPoint_NR
         electron_R_NRpush.velocity = electron_R_NRpush.velocity - \
-            0.5*DT_R*(charge/mass)*electricFieldAtPoint_R_NRpush
+            0.5 * DT_R * (charge / mass) * electricFieldAtPoint_R_NRpush
 
         momentum_0 = velocityToMomentum(
             electron_R_Rpush.mass, electron_R_Rpush.velocity)
-        momentum_minusHalf = momentum_0 - 0.5*DT_R * \
-            electron_R_Rpush.charge*electricFieldAtPoint_R_Rpush
+        momentum_minusHalf = momentum_0 - 0.5 * DT_R * \
+            electron_R_Rpush.charge * electricFieldAtPoint_R_Rpush
         electron_R_Rpush.velocity = momentumToVelocity(
             electron_R_Rpush.mass, momentum_minusHalf)
 
     elif step == steps:
         # Advance velocity by 1/2 step
         electron_NR.velocity = electron_NR.velocity + \
-            0.5*DT_NR*(charge/mass)*electricFieldAtPoint_NR
+            0.5 * DT_NR * (charge / mass) * electricFieldAtPoint_NR
         electron_R_NRpush.velocity = electron_R_NRpush.velocity + \
-            0.5*DT_R*(charge/mass)*electricFieldAtPoint_R_NRpush
+            0.5 * DT_R * (charge / mass) * electricFieldAtPoint_R_NRpush
 
         momentum_N = velocityToMomentum(
             electron_R_Rpush.mass, electron_R_Rpush.velocity)
-        momentum_plusHalf = momentum_N + 0.5*DT_R * \
-            electron_R_Rpush.charge*electricFieldAtPoint_R_Rpush
+        momentum_plusHalf = momentum_N + 0.5 * DT_R * \
+            electron_R_Rpush.charge * electricFieldAtPoint_R_Rpush
         electron_R_Rpush.velocity = momentumToVelocity(
             electron_R_Rpush.mass, momentum_plusHalf)
 
@@ -110,8 +110,8 @@ for step in range(steps+1):
     positions_R_NRpush.append(electron_R_NRpush.position[0])
     velocities_R_NRpush.append(electron_R_NRpush.velocity[0])
 
-seconds_NR = [i*DT_NR for i in range(steps + 2)]
-seconds_R = [i*DT_R for i in range(steps + 2)]
+seconds_NR = [i * DT_NR for i in range(steps + 2)]
+seconds_R = [i * DT_R for i in range(steps + 2)]
 
 # eric: subtlety here where ther eis a 0.5*DT for some
 

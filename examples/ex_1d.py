@@ -1,12 +1,13 @@
-from solvers.dirichlet import dirichlet as dirBC
-from solvers.particle import particle
-from solvers.particleUtils import velocityToMomentum, momentumToVelocity
-from solvers.esSolve import laplace1D, potentialToElectricField, electricFieldAtPoint
 import matplotlib.pyplot as plt
 import os
 import sys
 sys.path.append(os.path.join('./'))
 #sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
+
+from solvers.dirichlet import dirichlet as dirBC
+from solvers.particle import particle
+from solvers.particleUtils import velocityToMomentum, momentumToVelocity
+from solvers.esSolve import laplace1D, potentialToElectricField, electricFieldAtPoint
 
 
 NX = 100
