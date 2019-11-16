@@ -8,3 +8,6 @@ __pycache__/
 
 *.o
 *.so
+
+# Build
+solvers/build/*

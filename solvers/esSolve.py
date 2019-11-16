@@ -2,8 +2,9 @@ import os
 import sys
 import math
 import numpy as np
+sys.path.append(os.path.join('./'))
 
-sys.path.append(os.path.join('.'))
+#sys.path.append(os.path.join('.'))
 
 
 # Converts grid indices (i,j,k) to 1d array indices
@@ -82,8 +83,8 @@ def put1DArrayOnGrid(N, array):
 # Solve linear system M x = B for x
 
 
-def solveLinearSystem(M, B, solType, relTol, absTol, useCython=True):
-    import linAlgSolveCy
+def solveLinearSystem(M, B, solType, relTol, absTol, useCython=False):
+    #import linAlgSolveCy
     import linAlgSolve
     if solType == "direct":
         if useCython:
@@ -108,7 +109,7 @@ def solveLinearSystem(M, B, solType, relTol, absTol, useCython=True):
 # Solve linear system M x = potBC but return x on the computational grid
 
 
-def solveForPotential(N, M, potBC, solType, relTol, absTol, useCython=True):
+def solveForPotential(N, M, potBC, solType, relTol, absTol, useCython=False):
     return put1DArrayOnGrid(N, solveLinearSystem(M, potBC, solType, relTol, absTol, useCython))
 
 # R_0 = [X0,Y0,Z0]
@@ -383,9 +384,10 @@ def setupNonBCRows(N, D, M, rowsNotBC):
             coeffZ = 0.0
 
         coeffXYZ = -2.0*(coeffX+coeffY+coeffZ)
+        col = row - (NZ+1)*(NY+1)
 
-        M[row][row - (NZ+1)*(NY+1)] = coeffX
-        M[row][row + (NZ+1)*(NY+1)] = coeffX
+        M[row][col] = coeffX
+        M[row][col] = coeffX
 
         if dim == 2 or dim == 3:
             M[row][row - (NZ+1)] = coeffY
@@ -401,26 +403,26 @@ def setupNonBCRows(N, D, M, rowsNotBC):
 
 
 def laplace1D(NX, DX, BCX_0, BCX_NX,
-              solType, relTol=0.1, absTol=0.1, useCython=True):
+              solType, relTol=0.1, absTol=0.1, useCython=False):
     return laplace([NX, 0, 0], [DX, 1.0, 1.0], [BCX_0], [BCX_NX],
                    solType, relTol, absTol, useCython)
 
 
 def laplace2D(NX, DX, BCX_0, BCX_NX, NY, DY, BCY_0, BCY_NY,
-              solType, relTol=0.1, absTol=0.1, useCython=True):
+              solType, relTol=0.1, absTol=0.1, useCython=False):
     return laplace([NX, NY, 0], [DX, DY, 1.0], [BCX_0, BCY_0], [BCX_NX, BCY_NY],
                    solType, relTol, absTol, useCython)
 
 
 def laplace3D(NX, DX, BCX_0, BCX_NX, NY, DY, BCY_0, BCY_NY, NZ, DZ, BCZ_0, BCZ_NZ,
-              solType, relTol=0.1, absTol=0.1, useCython=True):
+              solType, relTol=0.1, absTol=0.1, useCython=False):
     return laplace([NX, NY, NZ], [DX, DY, DZ], [BCX_0, BCY_0, BCZ_0], [BCX_NX, BCY_NY, BCZ_NZ],
                    solType, relTol, absTol, useCython)
 
 # General Laplace Solver
 
 
-def laplace(N, D, BC0, BCN, solType, relTol=0.1, absTol=0.1, useCython=True):
+def laplace(N, D, BC0, BCN, solType, relTol=0.1, absTol=0.1, useCython=False):
     (NX, NY, NZ) = (N[0], N[1], N[2])
     (DX, DY, DZ) = (D[0], D[1], D[2])
     pts = (NX+1)*(NY+1)*(NZ+1)

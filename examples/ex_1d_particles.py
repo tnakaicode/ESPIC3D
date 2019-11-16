@@ -44,14 +44,14 @@ DT_NR = T_NR/steps
 DT_R = T_R/steps
 
 # Solve for potential
-pot1D_NR = esSolve.laplace1D(NX, DX, V0, VN_NR, "gaussSeidel",
+pot1D_NR = laplace1D(NX, DX, V0, VN_NR, "gaussSeidel",
                              relTol=0.0, absTol=1.0e-3*(deltaV_NR), useCython=False)
-pot1D_R = esSolve.laplace1D(NX, DX, V0, VN_R, "gaussSeidel",
+pot1D_R = laplace1D(NX, DX, V0, VN_R, "gaussSeidel",
                             relTol=0.0, absTol=1.0e-3*(deltaV_R), useCython=False)
 
 # Compute E = - grad V on grid
-electricFieldOnGrid_NR = esSolve.potentialToElectricField(pot1D_NR, [DX])
-electricFieldOnGrid_R = esSolve.potentialToElectricField(pot1D_R, [DX])
+electricFieldOnGrid_NR = potentialToElectricField(pot1D_NR, [DX])
+electricFieldOnGrid_R = potentialToElectricField(pot1D_R, [DX])
 
 positions_NR = [electron_NR.position[0]]
 velocities_NR = [electron_NR.velocity[0]]
@@ -60,13 +60,13 @@ velocities_R_Rpush = [electron_R_Rpush.velocity[0]]
 positions_R_NRpush = [electron_R_NRpush.position[0]]
 velocities_R_NRpush = [electron_R_NRpush.velocity[0]]
 
-for step in xrange(steps+1):
+for step in range(steps+1):
     # Compute E at particle position
-    electricFieldAtPoint_NR = esSolve.electricFieldAtPoint(
+    electricFieldAtPoint_NR = electricFieldAtPoint(
         electricFieldOnGrid_NR, [DX], [X0], electron_NR.position)
-    electricFieldAtPoint_R_Rpush = esSolve.electricFieldAtPoint(
+    electricFieldAtPoint_R_Rpush = electricFieldAtPoint(
         electricFieldOnGrid_R, [DX], [X0], electron_R_Rpush.position)
-    electricFieldAtPoint_R_NRpush = esSolve.electricFieldAtPoint(
+    electricFieldAtPoint_R_NRpush = electricFieldAtPoint(
         electricFieldOnGrid_R, [DX], [X0], electron_R_NRpush.position)
 
     if step == 0:
@@ -76,11 +76,11 @@ for step in xrange(steps+1):
         electron_R_NRpush.velocity = electron_R_NRpush.velocity - \
             0.5*DT_R*(charge/mass)*electricFieldAtPoint_R_NRpush
 
-        momentum_0 = particleUtils.velocityToMomentum(
+        momentum_0 = velocityToMomentum(
             electron_R_Rpush.mass, electron_R_Rpush.velocity)
         momentum_minusHalf = momentum_0 - 0.5*DT_R * \
             electron_R_Rpush.charge*electricFieldAtPoint_R_Rpush
-        electron_R_Rpush.velocity = particleUtils.momentumToVelocity(
+        electron_R_Rpush.velocity = momentumToVelocity(
             electron_R_Rpush.mass, momentum_minusHalf)
 
     elif step == steps:
@@ -90,11 +90,11 @@ for step in xrange(steps+1):
         electron_R_NRpush.velocity = electron_R_NRpush.velocity + \
             0.5*DT_R*(charge/mass)*electricFieldAtPoint_R_NRpush
 
-        momentum_N = particleUtils.velocityToMomentum(
+        momentum_N = velocityToMomentum(
             electron_R_Rpush.mass, electron_R_Rpush.velocity)
         momentum_plusHalf = momentum_N + 0.5*DT_R * \
             electron_R_Rpush.charge*electricFieldAtPoint_R_Rpush
-        electron_R_Rpush.velocity = particleUtils.momentumToVelocity(
+        electron_R_Rpush.velocity = momentumToVelocity(
             electron_R_Rpush.mass, momentum_plusHalf)
 
     else:
@@ -110,8 +110,8 @@ for step in xrange(steps+1):
     positions_R_NRpush.append(electron_R_NRpush.position[0])
     velocities_R_NRpush.append(electron_R_NRpush.velocity[0])
 
-seconds_NR = [i*DT_NR for i in xrange(steps + 2)]
-seconds_R = [i*DT_R for i in xrange(steps + 2)]
+seconds_NR = [i*DT_NR for i in range(steps + 2)]
+seconds_R = [i*DT_R for i in range(steps + 2)]
 
 # eric: subtlety here where ther eis a 0.5*DT for some
 
