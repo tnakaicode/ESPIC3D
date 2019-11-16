@@ -117,11 +117,11 @@ def solveForPotential(N, M, potBC, solType, relTol, absTol, useCython=False):
 
 
 def electricFieldAtPoint(E_grid, D, R_0, R):
-    dim = len(E_grid.shape) - 1
+    num, dim = E_grid.shape
 
     (DX, X_0, X) = (D[0], R_0[0], R[0])
     X_disp = X - X_0
-    leftIndices = [math.floor(X_disp/DX)]
+    leftIndices = [math.floor(X_disp/DX)%num]
 
     if dim > 1:
         (DY, Y_0, Y) = (D[1], R_0[1], R[1])
@@ -136,13 +136,12 @@ def electricFieldAtPoint(E_grid, D, R_0, R):
     rightIndices = [index + 1 for index in leftIndices]
 
     if dim == 1:
-        H_x = X_disp/DX - leftIndices[0]
         idx = leftIndices[0]
-
+        H_x = X_disp/DX - idx        
         E_point = (1.0 - H_x) * E_grid[idx]
 
-        if rightIndices[0] < E_grid.shape[0]:
-            E_point += H_x * E_grid[rightIndices[0]]
+        if idx < E_grid.shape[0]:
+            E_point += H_x * E_grid[idx]
 
     elif dim == 2:
         H_x = X_disp/DX - leftIndices[0]

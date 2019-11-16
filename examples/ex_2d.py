@@ -5,7 +5,7 @@ import sys
 import time
 from mpl_toolkits.mplot3d import axes3d
 
-sys.path.append(os.path.join('./'))
+sys.path.append(os.path.join('../'))
 #sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../solvers')
 from solvers.esSolve import laplace2D
 from solvers.dirichlet import dirichlet as dirBC
@@ -68,7 +68,6 @@ def plot2Darrays(arrays):
                 X, Y, array[0][:], label='absolute tolerance = ' + array[1], color=array[2])
 
     plt.legend(loc='best')
-    plt.show()
 
 
 plot2Darrays([[potential_1, '1.0', 'green'],
@@ -76,3 +75,4 @@ plot2Darrays([[potential_1, '1.0', 'green'],
               [potential_3, '1.0e-3', 'blue']])
 
 plot2Darrays([potential_3])
+plt.show()

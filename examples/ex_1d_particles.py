@@ -4,7 +4,7 @@ import math
 import os
 import sys
 import scipy.constants
-sys.path.append(os.path.join('./'))
+sys.path.append(os.path.join('../'))
 #sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '../solvers/')
 
 from solvers.dirichlet import dirichlet as dirBC
@@ -115,14 +115,17 @@ seconds_R = [i * DT_R for i in range(steps + 2)]
 
 # eric: subtlety here where ther eis a 0.5*DT for some
 
+plt.figure()
 plt.plot(seconds_NR, velocities_NR)
-plt.show()
+
+plt.figure()
 plt.plot(seconds_R, velocities_R_NRpush)
 plt.plot(seconds_R, velocities_R_Rpush)
-plt.show()
 
+plt.figure()
 plt.plot(seconds_NR, positions_NR)
-plt.show()
+
+plt.figure()
 plt.plot(seconds_R, positions_R_NRpush)
 plt.plot(seconds_R, positions_R_Rpush)
 plt.show()
