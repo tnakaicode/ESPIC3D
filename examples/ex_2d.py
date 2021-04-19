@@ -33,7 +33,7 @@ VNx = dirBC(np.fromfunction(nonGroundedWall, (NY + 1,)))
 V0y = dirBC(np.zeros((NX + 1)))
 VNy = dirBC(np.zeros((NX + 1)))
 
-start = time.clock()
+start = time.time()
 
 potential_1 = laplace2D(
     NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=1.0)
@@ -42,7 +42,7 @@ potential_2 = laplace2D(
 potential_3 = laplace2D(
     NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=1.0e-3)
 
-end = time.clock()
+end = time.time()
 
 print("That took", round(end - start, 1), "seconds.")
 
@@ -75,4 +75,4 @@ plot2Darrays([[potential_1, '1.0', 'green'],
               [potential_3, '1.0e-3', 'blue']])
 
 plot2Darrays([potential_3])
-plt.show()
+plt.savefig("./ex_2d.png")

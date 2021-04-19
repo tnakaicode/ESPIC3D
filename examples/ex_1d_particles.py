@@ -117,18 +117,21 @@ seconds_R = [i * DT_R for i in range(steps + 2)]
 
 plt.figure()
 plt.plot(seconds_NR, velocities_NR)
+plt.savefig("./ex_1d_particles_001.png")
 
 plt.figure()
 plt.plot(seconds_R, velocities_R_NRpush)
 plt.plot(seconds_R, velocities_R_Rpush)
+plt.savefig("./ex_1d_particles_002.png")
 
 plt.figure()
 plt.plot(seconds_NR, positions_NR)
+plt.savefig("./ex_1d_particles_003.png")
 
 plt.figure()
 plt.plot(seconds_R, positions_R_NRpush)
 plt.plot(seconds_R, positions_R_Rpush)
-plt.show()
+plt.savefig("./ex_1d_particles_004.png")
 
 # print electron.position[0]
 # print electron.velocity[0]

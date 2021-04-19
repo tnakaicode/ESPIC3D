@@ -32,17 +32,17 @@ VNx = dirBC(np.fromfunction(nonGroundedWall, (NY + 1,)))
 V0y = dirBC(np.zeros((NX + 1)))
 VNy = dirBC(np.zeros((NX + 1)))
 
-start = time.clock()
+start = time.time()
 potential_NoCython = laplace2D(
     NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=1.0e-3, useCython=False)
-end = time.clock()
+end = time.time()
 seconds_NoCython = end - start
 print("No Cython took", round(seconds_NoCython, 1), "seconds.")
 
-start = time.clock()
+start = time.time()
 potential_Cython = laplace2D(
     NX, DX, V0x, VNx, NY, DY, V0y, VNy, "gaussSeidel", relTol=0.0, absTol=1.0e-3, useCython=False)
-end = time.clock()
+end = time.time()
 seconds_Cython = end - start
 print("Cython took", round(seconds_Cython, 1), "seconds.")
 

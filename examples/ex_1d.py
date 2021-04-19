@@ -25,4 +25,4 @@ pot1D = laplace1D(NX, DX, V0, VN, "gaussSeidel", relTol=0.0,
 
 # could use X0 here to plot versus position instead of index
 plt.plot(pot1D)
-plt.show()
+plt.savefig("./ex_1d.png")
